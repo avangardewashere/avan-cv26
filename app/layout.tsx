@@ -1,3 +1,4 @@
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 
@@ -157,6 +158,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           {children}
           <RevealObserver />
         </ThemeProvider>
+        {/*
+          Real-visitor Core Web Vitals for the Vercel dashboard. In production
+          its script comes from /_vercel/speed-insights, which only Vercel
+          serves; in dev a debug build logs to the console instead of sending.
+        */}
+        <SpeedInsights />
       </body>
     </html>
   );
