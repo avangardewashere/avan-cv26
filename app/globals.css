@@ -1,0 +1,422 @@
+@import "tailwindcss";
+
+/*
+ * next-themes writes `class="dark"` or `class="light"` on <html>. The `dark:`
+ * variant follows that class rather than the OS media query.
+ */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Metric-matched fallbacks for the self-hosted faces (the `fallback` names in
+ * app/layout.tsx). The values are the ones next/font/google generated, so text
+ * set before the web fonts arrive takes the same space it will after.
+ */
+@font-face {
+  font-family: "Geist Fallback";
+  src: local("Arial");
+  ascent-override: 95.94%;
+  descent-override: 28.16%;
+  line-gap-override: 0%;
+  size-adjust: 104.76%;
+}
+
+@font-face {
+  font-family: "Geist Mono Fallback";
+  src: local("Arial");
+  ascent-override: 74.67%;
+  descent-override: 21.92%;
+  line-gap-override: 0%;
+  size-adjust: 134.59%;
+}
+
+@font-face {
+  font-family: "Bricolage Grotesque Fallback";
+  src: local("Arial");
+  ascent-override: 88.21%;
+  descent-override: 25.61%;
+  line-gap-override: 0%;
+  size-adjust: 105.43%;
+}
+
+/*
+ * ---------------------------------------------------------------------------
+ * Tokens — Redesign v2
+ * ---------------------------------------------------------------------------
+ * The v2 handoff is dark-only; dark is therefore the source of truth and the
+ * default theme, defined on `:root` and `.dark`. `.light` is derived: it
+ * redefines values, it never introduces a token.
+ *
+ * Every white-alpha hairline in the design (rgba(255,255,255,.06) and so on)
+ * is written in components as `foreground/6`, `foreground/8`, … — the same
+ * value in dark, and automatically a dark-ink hairline in light.
+ *
+ * The accent is split in two because lime cannot work as text on a light
+ * ground: `--accent` is the fill (buttons, the contact card) and is lime in
+ * both themes; `--accent-ink` is the accent used as text, dots and lines —
+ * lime in dark, a deep olive in light.
+ */
+:root,
+.dark {
+  color-scheme: dark;
+
+  --background: #0a0a0b;
+  --foreground: #f5f5f7;
+  --muted: #9a9aa3;
+  --subtle: #7d7d88;
+  /* Long-form body copy that sits a step brighter than muted. */
+  --ink-soft: #c9c9d1;
+
+  --surface: #141416;
+  --surface-raised: #16161a;
+  --surface-well: #1b1b1f;
+  /* The plates stacked beneath the lead project card. */
+  --deck-1: #121214;
+  --deck-2: #0f0f11;
+
+  --accent: #c8ff4d;
+  --accent-hover: #d9ff7a;
+  --accent-foreground: #0a0a0b;
+  --accent-ink: #c8ff4d;
+  /* Hover for the dark pill on the lime contact card; the card is lime in both themes, so this is too. */
+  --accent-foreground-hover: #1b1b1f;
+
+  --nav-bg: rgb(20 20 22 / 0.72);
+  /* Chips overlaid on screenshots stay dark in both themes. */
+  --media-chip-bg: rgb(10 10 11 / 0.7);
+  --media-chip-fg: #f5f5f7;
+
+  --grid-line: rgb(255 255 255 / 0.035);
+  --glow-accent-soft: rgb(200 255 77 / 0.1);
+
+  --shadow-nav: 0 10px 40px -10px rgb(0 0 0 / 0.6);
+  --shadow-card: 0 30px 70px -30px rgb(0 0 0 / 0.9),
+    inset 0 1px 0 rgb(255 255 255 / 0.06);
+  --shadow-stat: 0 24px 50px -28px rgb(0 0 0 / 0.9),
+    inset 0 1px 0 rgb(255 255 255 / 0.06);
+  --shadow-panel: 0 20px 50px -30px rgb(0 0 0 / 0.9),
+    inset 0 1px 0 rgb(255 255 255 / 0.05);
+  --shadow-open: 0 30px 70px -30px rgb(0 0 0 / 0.95),
+    inset 0 1px 0 rgb(255 255 255 / 0.06);
+  --shadow-contact: 0 40px 90px -40px rgb(200 255 77 / 0.35);
+  /* The inner plate of a double-bezel tray: a top highlight, no drop shadow. */
+  --shadow-core: inset 0 1px 0 rgb(255 255 255 / 0.06);
+}
+
+.light {
+  color-scheme: light;
+
+  --background: #f4f4f1;
+  --foreground: #0a0a0b;
+  --muted: #55555e;
+  /* Clears 4.5:1 on --background and on white cards. */
+  --subtle: #676771;
+  --ink-soft: #2e2e35;
+
+  --surface: #ffffff;
+  --surface-raised: #ffffff;
+  --surface-well: #e9e9e4;
+  --deck-1: #fafaf8;
+  --deck-2: #f7f7f4;
+
+  --accent: #c8ff4d;
+  --accent-hover: #bdf23c;
+  --accent-foreground: #0a0a0b;
+  /* Lime is ~1.2:1 on white; this olive clears 5.8:1 on --background. */
+  --accent-ink: #3f6b00;
+  --accent-foreground-hover: #1b1b1f;
+
+  --nav-bg: rgb(255 255 255 / 0.72);
+  --media-chip-bg: rgb(10 10 11 / 0.7);
+  --media-chip-fg: #f5f5f7;
+
+  --grid-line: rgb(10 10 11 / 0.05);
+  --glow-accent-soft: rgb(180 235 50 / 0.16);
+
+  --shadow-nav: 0 10px 40px -12px rgb(20 20 30 / 0.18);
+  --shadow-card: 0 30px 70px -34px rgb(20 20 30 / 0.22),
+    inset 0 1px 0 rgb(255 255 255 / 0.9);
+  --shadow-stat: 0 24px 50px -30px rgb(20 20 30 / 0.2),
+    inset 0 1px 0 rgb(255 255 255 / 0.9);
+  --shadow-panel: 0 20px 50px -32px rgb(20 20 30 / 0.18),
+    inset 0 1px 0 rgb(255 255 255 / 0.9);
+  --shadow-open: 0 30px 70px -34px rgb(20 20 30 / 0.24),
+    inset 0 1px 0 rgb(255 255 255 / 0.9);
+  --shadow-contact: 0 40px 90px -40px rgb(120 170 20 / 0.45);
+  --shadow-core: inset 0 1px 0 rgb(255 255 255 / 0.9);
+}
+
+/*
+ * Motion vocabulary. `static` so the variables exist even when read only
+ * through var() in plain CSS. Tailwind's own default curve is its
+ * ease-in-out, so it is replaced here for every bare transition-* utility.
+ *   fluid — enter, expand, lift (mass, no overshoot)
+ *   soft  — hover, colour, press
+ *   exit  — leaving, at ~40% of the matching enter duration
+ * Scroll-linked mappings stay linear on purpose: they must track 1:1.
+ */
+@theme static {
+  --ease-fluid: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-soft: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-exit: cubic-bezier(0.5, 0, 0.75, 0);
+  --transition-duration-hover: 200ms;
+  --transition-duration-lift: 450ms;
+  --transition-duration-expand: 500ms;
+  --transition-duration-exit: 200ms;
+  --transition-duration-reveal: 800ms;
+  --default-transition-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Homepage section rhythm: tracks width like the type does, not height. */
+:root {
+  --space-section: clamp(64px, calc(4vh + 5vw), 136px);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-subtle: var(--subtle);
+  --color-ink-soft: var(--ink-soft);
+
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-well: var(--surface-well);
+  --color-deck-1: var(--deck-1);
+  --color-deck-2: var(--deck-2);
+
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-foreground-hover: var(--accent-foreground-hover);
+
+  --color-nav: var(--nav-bg);
+  --color-media-chip: var(--media-chip-bg);
+  --color-media-chip-fg: var(--media-chip-fg);
+
+  --shadow-nav: var(--shadow-nav);
+  --shadow-card: var(--shadow-card);
+  --shadow-stat: var(--shadow-stat);
+  --shadow-panel: var(--shadow-panel);
+  --shadow-open: var(--shadow-open);
+  --shadow-contact: var(--shadow-contact);
+  --shadow-core: var(--shadow-core);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-bricolage);
+}
+
+@layer base {
+  * {
+    border-color: color-mix(in oklab, var(--foreground) 8%, transparent);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+    /* The prototypes never set a base line-height; preflight's 1.5 made every unset line taller. */
+    line-height: normal;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /*
+   * The design's global link hover. Base layer on purpose: any element that
+   * sets its own `hover:text-*` utility (pill buttons, nav links) wins over it.
+   */
+  a {
+    transition: color var(--transition-duration-hover) var(--ease-soft);
+  }
+
+  a:hover {
+    color: var(--accent-ink);
+  }
+
+  button:not(:disabled) {
+    cursor: pointer;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent-ink);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+  }
+}
+
+@layer components {
+  .skip-link {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 60;
+    transform: translateY(-200%);
+    transition: transform 200ms var(--ease-soft);
+  }
+
+  .skip-link:focus {
+    transform: translateY(0);
+  }
+}
+
+@layer utilities {
+  /*
+   * The page column. The prototypes are content-box, so the 1200px is the
+   * content width with the gutter added outside it, not inside it.
+   */
+  .page-shell {
+    box-sizing: content-box;
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: clamp(20px, 4vw, 40px);
+  }
+
+  /* Bricolage Grotesque, bold. Size and tracking vary per use. */
+  .display {
+    font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+    font-weight: 700;
+  }
+
+  /*
+   * Mono uppercase pill above headings: "Selected work", "Experience".
+   * Block-level `flex` + fit-content, not inline-flex: an inline pill sits in
+   * a line box with a strut and gains a few px beneath it. Recolour it by
+   * overriding --accent-ink (the contact card does).
+   */
+  .eyebrow {
+    margin: 0;
+    display: flex;
+    width: fit-content;
+    align-items: center;
+    height: 26px;
+    padding-inline: 11px;
+    border-radius: 999px;
+    border: 1px solid color-mix(in oklab, var(--accent-ink) 24%, transparent);
+    background-color: color-mix(in oklab, var(--accent-ink) 6%, transparent);
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+  }
+
+  /* Stack and skill chip. */
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    height: 26px;
+    padding-inline: 10px;
+    border-radius: 999px;
+    background-color: color-mix(in oklab, var(--foreground) 5%, transparent);
+    border: 1px solid color-mix(in oklab, var(--foreground) 6%, transparent);
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /*
+   * Homepage sections below the hero. content-visibility: auto keeps them out
+   * of the first layout; contain-intrinsic-block-size stands in for their
+   * content height until then (`auto`: once rendered, the real height is
+   * remembered). Paint containment would clip card shadows, the contact glow
+   * and focus rings at the section edge, hence overflow-clip-margin, and the
+   * gate for browsers without it. components/home/defer-release.tsx lifts the
+   * hint once the page is idle; from then on the page renders as without it.
+   */
+  @supports (overflow-clip-margin: 1px) {
+    .defer-render {
+      content-visibility: auto;
+      contain-intrinsic-block-size: auto var(--defer-size, 1000px);
+      overflow-clip-margin: 100px;
+    }
+
+    :root[data-rendered] .defer-render {
+      content-visibility: visible;
+    }
+  }
+
+  .animate-pulse-dot {
+    animation: pulse-dot 2s ease-out infinite;
+  }
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /*
+   * One-shot reveals below the fold (components/reveal-observer.tsx arms
+   * them). Only armed elements are ever hidden, so no-JS, reduced motion and
+   * print always render everything. Anything the keyboard reaches early shows.
+   * Put [data-reveal] on a wrapper, never on an element that owns its own
+   * translate transition (the project card's hover lift).
+   */
+  /* Only the reveal animates; arming (the hide) is instant, off screen. */
+  [data-reveal][data-armed]:is([data-in], :focus-within) {
+    transition:
+      opacity var(--transition-duration-reveal) var(--ease-fluid),
+      translate var(--transition-duration-reveal) var(--ease-fluid);
+    transition-delay: calc(min(var(--i, 0), 5) * 70ms);
+  }
+
+  [data-reveal][data-armed]:focus-within {
+    transition-delay: 0s;
+  }
+
+  [data-reveal][data-armed]:not([data-in]):not(:focus-within) {
+    opacity: 0;
+    translate: 0 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0s !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}
+
+@media print {
+  [data-reveal] {
+    opacity: 1 !important;
+    translate: none !important;
+  }
+}
