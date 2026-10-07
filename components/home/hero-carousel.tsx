@@ -14,6 +14,10 @@ const PORTRAIT = "(max-aspect-ratio: 4/5)";
 
 type Phase = "video" | "banner";
 
+/** play() rejecting with AbortError only means a pause() came first: the visitor moved on. */
+const isAbort = (error: unknown) =>
+  error instanceof DOMException && error.name === "AbortError";
+
 /*
  * The dark chip every control on the hero sits on (--media-chip-bg, 70%
  * near-black, blurred), so white type and marks stay legible over the
@@ -76,19 +80,38 @@ export function HeroCarousel() {
     setPhases(phasesRef.current);
   };
 
+  /**
+   * A video that cannot play (no playable source, a decode error, autoplay
+   * blocked by data saver or low power) gives way to its banner, so the
+   * slide still reaches Replay, About and the countdown.
+   */
+  const settle = (i: number) => {
+    videos.current[i]?.pause();
+    setPhase(i, "banner");
+  };
+
   /** Starts slide `i`: its video from the top, unless it was already watched. */
   const start = (i: number, motionReduced: boolean) => {
     videos.current.forEach((video, k) => {
       if (video && k !== i) video.pause();
     });
-    if (motionReduced || phasesRef.current[i] === "banner") return;
+    // Reduced motion never plays on its own: a slide left mid-replay comes back on its banner.
+    if (motionReduced) {
+      if (phasesRef.current[i] === "video") settle(i);
+      return;
+    }
+    if (phasesRef.current[i] === "banner") return;
     const video = videos.current[i];
     if (!video) return;
+    if (video.networkState === HTMLMediaElement.NETWORK_NO_SOURCE)
+      return settle(i);
     video.currentTime = 0;
     video.muted = muted;
-    // play() rejects when the browser blocks autoplay (data saver, low power); the first frame stays.
-    video.play().catch(() => {});
+    video.play().catch((error: unknown) => {
+      if (!isAbort(error)) settle(i);
+    });
   };
+  const settleFirst = useEffectEvent(() => settle(0));
 
   /** Shows slide `i`, from the timer or from a pagination button. */
   const show = (i: number, byUser: boolean) => {
@@ -134,7 +157,12 @@ export function HeroCarousel() {
       setPhases(phasesRef.current);
       return;
     }
-    videos.current[0]?.play().catch(() => {});
+    // Every source may have failed before hydration attached onError.
+    if (videos.current[0]?.networkState === HTMLMediaElement.NETWORK_NO_SOURCE)
+      return settleFirst();
+    videos.current[0]?.play().catch((error: unknown) => {
+      if (!isAbort(error)) settleFirst();
+    });
   }, []);
 
   const phase = phases[index];
@@ -161,8 +189,13 @@ export function HeroCarousel() {
     let frame = 0;
     let last = performance.now();
     const tick = (now: number) => {
+      // A banner reached without the video playing (see settle) times only its hold.
       const length =
-        video && Number.isFinite(video.duration) ? video.duration * 1000 : 0;
+        video &&
+        Number.isFinite(video.duration) &&
+        (phase === "video" || video.currentTime > 0)
+          ? video.duration * 1000
+          : 0;
       // Capped per frame: frames stop in a background tab, and time away should not count.
       if (phase === "banner" && !held)
         bannerElapsed.current += Math.min(now - last, 100);
@@ -258,8 +291,10 @@ export function HeroCarousel() {
       className="relative h-svh overflow-hidden"
       style={{ backgroundColor: current.edge }}
     >
+      {/* Not a tab stop: the `|` buttons are the keyboard way through the slides. */}
       <div
         ref={track}
+        tabIndex={-1}
         className="flex h-full snap-x snap-mandatory overflow-x-auto overflow-y-hidden overscroll-x-contain [scrollbar-width:none] motion-safe:scroll-smooth [&::-webkit-scrollbar]:hidden"
       >
         {promos.map((promo, i) => {
@@ -287,13 +322,19 @@ export function HeroCarousel() {
                 aria-label={promo.label}
                 aria-hidden={showBanner}
                 onEnded={() => setPhase(i, "banner")}
+                onError={() => settle(i)}
               >
                 <source
                   src={promo.video.src720}
                   type="video/mp4"
                   media="(max-width: 960px)"
                 />
-                <source src={promo.video.src1080} type="video/mp4" />
+                {/* A failed source reports here, not on the video; the last one failing means none will play. */}
+                <source
+                  src={promo.video.src1080}
+                  type="video/mp4"
+                  onError={() => settle(i)}
+                />
               </video>
 
               {/* The banner: in the DOM from the start, so it is decoded before the crossfade. */}
@@ -395,6 +436,7 @@ export function HeroCarousel() {
                 className="bg-accent text-accent-foreground hover:bg-accent-hover inline-flex h-11 items-center rounded-full px-5 text-[15px] font-semibold transition-colors motion-safe:active:scale-[0.98]"
               >
                 Replay video
+                <span className="sr-only">, {current.title}</span>
               </button>
               <Link
                 href={current.projectHref}
@@ -404,6 +446,7 @@ export function HeroCarousel() {
                 )}
               >
                 About the project
+                <span className="sr-only">, {current.title}</span>
               </Link>
             </>
           ) : null}
