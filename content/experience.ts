@@ -106,31 +106,22 @@ export const experience: readonly Role[] = [
     tags: ["Node.js", "PayMaya", "GCash", "WordPress"],
   },
   {
-    slug: "sumague",
-    title: "Jr. Developer, Backend Focus",
-    company: "Sumague's Firm",
-    place: "Candelaria, Quezon",
-    period: "Feb 2020 – Jun 2021",
+    // Two employers, one row: the start of the career, both in Quezon
+    // province. Each bullet names its employer, title and dates, so nothing
+    // is attributed to the wrong one.
+    slug: "early",
+    // Not a title held: the real titles and dates are in the bullets.
+    title: "Early career",
+    company: "Sumague's Firm, Gleen Inc.",
+    place: "Candelaria and Lucena, Quezon",
+    period: "Apr 2019 – Jun 2021",
     summary:
-      "Backend work in C and C++ and SQL, plus the office's IT support between coding tasks.",
+      "Where it started: WordPress, then backend work in C, C++ and SQL, with IT support between coding tasks at both.",
     bullets: [
-      "Wrote backend code in C and C++, and form-driven CRUD over SQL with the pricing logic behind it.",
-      "Covered IT support whenever there was no coding task: troubleshooting staff hardware.",
+      "Sumague's Firm, Jr. Developer, Backend Focus (Feb 2020 – Jun 2021): backend code in C and C++, and form-driven CRUD over SQL with the pricing logic behind it.",
+      "Gleen Inc., WordPress Developer, part-time (Apr 2019 – Feb 2020): sped up WordPress sites and their SEO, built custom shortcodes and plugins, and deployed on Hostinger.",
+      "IT support whenever there was no coding task: troubleshooting staff hardware at Sumague's; installing applications and setting up new hires at Gleen.",
     ],
-    tags: ["C", "C++", "SQL", "IT support"],
-  },
-  {
-    slug: "gleen",
-    title: "WordPress Developer",
-    company: "Gleen Inc.",
-    place: "Lucena · Part-time",
-    period: "Apr 2019 – Feb 2020",
-    summary:
-      "Where it started: WordPress speed and SEO, custom shortcodes and plugins, Hostinger deploys, plus IT support.",
-    bullets: [
-      "Sped up WordPress sites and their SEO, built custom shortcodes and plugins, and deployed on Hostinger.",
-      "Doubled as IT support between web tasks: installed applications and set up new hires.",
-    ],
-    tags: ["WordPress", "PHP", "SEO", "Hostinger", "IT support"],
+    tags: ["C", "C++", "SQL", "WordPress", "PHP", "IT support"],
   },
 ];

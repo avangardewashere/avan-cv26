@@ -40,6 +40,7 @@ const NUMBER_WORDS = [
   "Seven",
   "Eight",
   "Nine",
+  "Ten",
 ];
 const word = (n: number) => NUMBER_WORDS[n] ?? String(n);
 
@@ -168,9 +169,9 @@ export function WorkRail({
               {`${word(rest.length)} more projects`}
             </h3>
 
-            {/* The projects not dealt this time: their banners, small. Decorative; the titles below are the links. */}
-            <div aria-hidden className="mt-3.5 grid grid-cols-2 gap-1.5">
-              {rest.map((item) =>
+            {/* The projects not dealt this time: up to four banners, small and cropped flat so this card stays no taller than a project card. Decorative; the titles below are the links. */}
+            <div aria-hidden className="mt-3 grid grid-cols-2 gap-1.5">
+              {rest.slice(0, 4).map((item) =>
                 item.thumb ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -181,19 +182,19 @@ export function WorkRail({
                     height={540}
                     loading="lazy"
                     decoding="async"
-                    className="border-foreground/8 bg-surface-well aspect-video w-full rounded-[10px] border object-cover"
+                    className="border-foreground/8 bg-surface-well aspect-[5/2] w-full rounded-[10px] border object-cover"
                   />
                 ) : (
                   <span
                     key={item.slug}
-                    className="bg-surface-well aspect-video rounded-[10px]"
+                    className="bg-surface-well aspect-[5/2] rounded-[10px]"
                   />
                 ),
               )}
             </div>
 
             {/* One line per title, so this card's height doesn't depend on which four are listed. */}
-            <ul className="m-0 mt-3.5 list-none space-y-1.5 p-0 text-[13.5px] leading-[1.35]">
+            <ul className="m-0 mt-3 list-none space-y-1 p-0 text-[13.5px] leading-[1.35]">
               {rest.map((item) => (
                 <li key={item.slug} className="truncate">
                   <Link href={item.href} className="text-ink-soft">

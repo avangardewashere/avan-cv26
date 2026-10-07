@@ -39,7 +39,8 @@ export type Discipline =
   | "Full stack"
   | "Backend / API"
   | "WordPress / PHP"
-  | "Front end";
+  | "Front end"
+  | "Mobile";
 
 /** Where a piece of work sat in the stack. Detail pages only. */
 export type StepTag = "UI" | "API" | "Data" | "Server" | "QA";
@@ -299,6 +300,51 @@ export const projects: readonly Project[] = [
     media: banner(
       "gym3d",
       "AMYGO poster: a low-poly lifter back-squats in the free-weights zone, beside the line Walk in. Pick a machine. Train. and the figures 12 machines, 17 exercises, 28 pieces to rearrange.",
+    ),
+  },
+  {
+    slug: "buildos",
+    discipline: "Mobile",
+    title: "BuildOS",
+    group: "Personal",
+    kind: "Personal · Android app",
+    year: "2026",
+    href: "https://buildos-ochre-zeta.vercel.app",
+    hrefLabel: "Project site",
+    // Not on the Play Store yet, so not "Live" (the default when there is a link).
+    status: "In development",
+    metric: "8",
+    metricLabel: "levels, project to single step",
+    summary:
+      "An offline Android app for planning projects as a tree. A project breaks down through up to eight levels, from version to single step, and progress rolls up automatically as the smallest pieces get done.",
+    archiveSummary:
+      "An offline Android project manager: every project is a tree up to eight levels deep, and progress rolls up on its own as the smallest steps get done.",
+    oneLiner:
+      "Offline Android project manager: break any project into steps; progress rolls up itself.",
+    lede: "An Android project manager built around one idea: any project can be broken into smaller pieces until each piece is a single step you can finish. Every project is a tree, and progress is never typed in by hand: it is calculated from the steps underneath, so a project's progress bar moves the moment a step anywhere inside it is ticked off. Everything runs on the device, with no account, no server and no sync; data lives in a local SQLite database.",
+    highlights: [
+      "Nested breakdown with a customizable level chain per project: Project, Version, Update, Feature, Phase, Cycle, Task and Step by default, renamed, recolored or extended per project",
+      "Automatic progress roll-up: a blocked step flags its whole branch, and a branch counts as done only when every step in it is done",
+      "Drag to reorder, move a whole branch to a new parent, and reuse templates saved from any branch at any depth",
+      "Archive for finished projects, a trash that keeps deleted work restorable for 30 days, search across the whole tree with each result's path, and JSON export and import",
+      { tag: "Data", text: "MVVM with a repository layer: screens never touch storage, which let the app move from AsyncStorage to SQLite with a one-time migration and no data loss" },
+      { tag: "Data", text: "Guarded schema migrations, with a test that reads the SQL source and fails if a new column ships without one; it would have caught a real bug that crashed the templates screen on older installs" },
+      { tag: "Data", text: "Stats from an append-only event log, counted once per item per day, so ticking a step on and off doesn't inflate them" },
+      { tag: "QA", text: "160 Jest unit tests across the tree logic, the trash lifecycle and the stats" },
+    ],
+    stack: [
+      "React Native",
+      "Expo",
+      "TypeScript",
+      "Zustand",
+      "SQLite",
+      "Expo Router",
+      "Reanimated",
+      "Jest",
+    ],
+    media: banner(
+      "buildos",
+      "BuildOS banner: a project tree eight levels deep, from Indie app launch down to Validate input, every level at 100%, beside the line Break it down. Watch it roll up.",
     ),
   },
   {

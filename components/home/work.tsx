@@ -48,7 +48,7 @@ export function Work() {
   return (
     <section
       id="work"
-      className="defer-render scroll-mt-20 pt-(--space-section) [--defer-size:605px] min-[480px]:[--defer-size:635px] min-[760px]:[--defer-size:610px] min-[1024px]:[--defer-size:615px] min-[1280px]:[--defer-size:645px]"
+      className="defer-render scroll-mt-20 pt-(--space-section) [--defer-size:600px] min-[480px]:[--defer-size:635px] min-[760px]:[--defer-size:595px] min-[1024px]:[--defer-size:605px] min-[1280px]:[--defer-size:630px]"
     >
       <div data-reveal className="mb-5">
         {/* The design sets no line-height, so its labels sit at `normal`, not preflight's 1.5. */}
