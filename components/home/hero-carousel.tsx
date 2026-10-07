@@ -93,11 +93,13 @@ export function HeroCarousel() {
   /** Shows slide `i`, from the timer or from a pagination button. */
   const show = (i: number, byUser: boolean) => {
     if (i < 0 || i >= count) return;
-    indexRef.current = i;
-    setIndex(i);
     const el = track.current;
     // No `behavior`: the track's motion-safe:scroll-smooth decides, so reduced motion jumps.
     el?.scrollTo({ left: i * el.clientWidth });
+    // The bar for the slide already showing: nothing starts over, and the countdown carries on.
+    if (i === indexRef.current) return;
+    indexRef.current = i;
+    setIndex(i);
     start(i, reduced);
     if (byUser) {
       setHeld(false);
