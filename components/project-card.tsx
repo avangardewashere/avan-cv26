@@ -11,12 +11,17 @@ type ProjectCardProps = {
   headingLevel?: "h2" | "h3";
   /** The card's rendered width, for picking a banner from the srcset. */
   sizes?: string;
+  /**
+   * The homepage carousel's card: the one-line summary instead of the
+   * paragraph, the metric on one line under the title, tighter spacing.
+   */
+  compact?: boolean;
   className?: string;
 };
 
 /**
- * One card for every project, on the homepage carousel and the /projects
- * archive. An `<article>`, not a link: it can hold two real destinations
+ * One card for every project: `compact` in the homepage carousel, full on
+ * the /projects archive. An `<article>`, not a link: it can hold two real destinations
  * (the case study and, when present, the live site), and anchors cannot
  * nest. The title link's ::after covers the card, so the whole card opens
  * the case study; the live-site link sits above it.
@@ -25,6 +30,7 @@ export function ProjectCard({
   project,
   headingLevel: Heading = "h2",
   sizes = "(min-width: 760px) 50vw, 100vw",
+  compact = false,
   className,
 }: ProjectCardProps) {
   const href = `/projects/${project.slug}`;
@@ -49,22 +55,58 @@ export function ProjectCard({
         />
       </div>
 
-      <div className="flex flex-1 flex-col gap-3.5 px-[22px] pt-[20px] pb-5">
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-          <span className="border-accent-ink/30 bg-accent-ink/8 text-accent-ink inline-flex h-[26px] items-center rounded-full border px-2.5 font-mono text-[11px] tracking-[0.06em] uppercase">
-            {project.discipline}
+      <div
+        className={cn(
+          "flex flex-1 flex-col",
+          compact
+            ? "gap-2.5 px-[18px] pt-4 pb-4"
+            : "gap-3.5 px-[22px] pt-[20px] pb-5",
+        )}
+      >
+        {/*
+          The compact card fits this on one line by naming only what kind of
+          work it was (Client, Employment, Personal) and the year.
+        */}
+        <div
+          className={cn(
+            "flex items-center gap-x-3 gap-y-2",
+            compact ? "flex-nowrap" : "flex-wrap",
+          )}
+        >
+          <span
+            className={cn(
+              "border-accent-ink/30 bg-accent-ink/8 text-accent-ink inline-flex items-center rounded-full border px-2.5 font-mono tracking-[0.06em] uppercase",
+              compact ? "h-6 text-[10.5px]" : "h-[26px] text-[11px]",
+            )}
+          >
+            {compact ? project.group : project.discipline}
           </span>
-          <span className="text-subtle font-mono text-[11px] tracking-[0.06em] uppercase">
-            {project.group} · {project.year}
+          <span className="text-subtle font-mono text-[11px] tracking-[0.06em] whitespace-nowrap uppercase">
+            {compact ? project.year : `${project.group} · ${project.year}`}
           </span>
         </div>
 
         {/*
           Title and metric side by side; a very narrow card (a 360px phone)
           stacks them, every card alike, instead of letting the metric spill.
+          The compact card always stacks, and holds every block to a fixed
+          number of lines (title 2, metric 1, summary 3), so all compact
+          cards are one height and a new deal in the carousel never moves it.
         */}
-        <div className="flex items-start justify-between gap-x-4 gap-y-2 @max-[290px]:flex-col">
-          <Heading className="display m-0 text-[24px] leading-[1.1] tracking-[-0.03em]">
+        <div
+          className={cn(
+            "flex items-start justify-between gap-x-4 gap-y-2",
+            compact ? "flex-col gap-y-1.5" : "@max-[290px]:flex-col",
+          )}
+        >
+          <Heading
+            className={cn(
+              "display m-0 tracking-[-0.03em]",
+              compact
+                ? "line-clamp-2 min-h-[2lh] text-[20px] leading-[1.15]"
+                : "text-[24px] leading-[1.1]",
+            )}
+          >
             <Link
               href={href}
               aria-describedby={cueId}
@@ -73,21 +115,48 @@ export function ProjectCard({
               {project.title}
             </Link>
           </Heading>
-          <p className="m-0 shrink-0 text-right @max-[290px]:text-left">
-            <span className="display text-accent-ink block text-[24px] leading-none tracking-[-0.04em]">
-              {project.metric}
-            </span>
-            <span className="text-subtle mt-1 block max-w-[14ch] text-[11.5px]">
-              {project.metricLabel}
-            </span>
-          </p>
+          {compact ? (
+            <p className="m-0 flex w-full min-w-0 items-baseline gap-x-2">
+              <span className="display text-accent-ink shrink-0 text-[18px] leading-none tracking-[-0.04em]">
+                {project.metric}
+              </span>
+              {/* One line; the full label is on the project page (and here on hover, and for screen readers). */}
+              <span
+                title={project.metricLabel}
+                className="text-subtle min-w-0 truncate text-[12px]"
+              >
+                {project.metricLabel}
+              </span>
+            </p>
+          ) : (
+            <p className="m-0 shrink-0 text-right @max-[290px]:text-left">
+              <span className="display text-accent-ink block text-[24px] leading-none tracking-[-0.04em]">
+                {project.metric}
+              </span>
+              <span className="text-subtle mt-1 block max-w-[14ch] text-[11.5px]">
+                {project.metricLabel}
+              </span>
+            </p>
+          )}
         </div>
 
-        <p className="text-muted m-0 text-[14.5px] leading-[1.55] text-pretty">
-          {project.archiveSummary}
+        <p
+          className={cn(
+            "text-muted m-0 text-pretty",
+            compact
+              ? "line-clamp-3 min-h-[3lh] text-[14px] leading-[1.5]"
+              : "text-[14.5px] leading-[1.55]",
+          )}
+        >
+          {compact ? project.oneLiner : project.archiveSummary}
         </p>
 
-        <div className="mt-auto flex flex-wrap gap-x-5 gap-y-2 pt-1 text-[14px] font-medium">
+        <div
+          className={cn(
+            "mt-auto flex flex-wrap gap-x-5 gap-y-2 pt-1 font-medium",
+            compact ? "text-[13.5px]" : "text-[14px]",
+          )}
+        >
           {/*
             Not a second link: the title's overlay already opens the case
             study, so this is the visible cue for it and clicks fall through

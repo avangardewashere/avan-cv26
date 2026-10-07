@@ -155,6 +155,15 @@
   --transition-duration-exit: 200ms;
   --transition-duration-reveal: 800ms;
   --default-transition-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
+
+  /* A tab panel settling in after a switch (About's capability tabs). */
+  --animate-panel-in: panel-in 450ms var(--ease-fluid);
+  @keyframes panel-in {
+    from {
+      opacity: 0;
+      translate: 0 6px;
+    }
+  }
 }
 
 /* Homepage section rhythm: tracks width like the type does, not height. */
@@ -343,6 +352,29 @@
   }
 }
 
+/*
+ * "More about me": a native <details> that slides open where the browser can
+ * animate to `height: auto` (::details-content + interpolate-size), and
+ * simply opens everywhere else. No transition under reduced motion.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .disclosure {
+    interpolate-size: allow-keywords;
+  }
+
+  .disclosure::details-content {
+    block-size: 0;
+    overflow-y: clip;
+    transition:
+      block-size var(--transition-duration-expand) var(--ease-fluid),
+      content-visibility var(--transition-duration-expand) allow-discrete;
+  }
+
+  .disclosure[open]::details-content {
+    block-size: auto;
+  }
+}
+
 @keyframes pulse-dot {
   0%,
   100% {
@@ -408,5 +440,20 @@
   [data-reveal] {
     opacity: 1 !important;
     translate: none !important;
+  }
+
+  /* About prints whole: the story behind "More about me" and every proof panel. */
+  .disclosure > summary {
+    display: none;
+  }
+
+  .disclosure::details-content {
+    content-visibility: visible;
+    block-size: auto;
+  }
+
+  .capability-tabs [role="tabpanel"] {
+    visibility: visible !important;
+    grid-area: auto !important;
   }
 }

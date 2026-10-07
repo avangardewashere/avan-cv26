@@ -89,9 +89,9 @@ export type Project = {
    * carousel (which uses `archiveSummary`); kept as written copy.
    */
   summary: string;
-  /** Every project card: the homepage carousel and the /projects archive. */
+  /** The /projects archive card. */
   archiveSummary: string;
-  /** One line. Not rendered since the "more work" list became the carousel; kept as written copy. */
+  /** One line: the homepage carousel's compact card. */
   oneLiner: string;
   /** Detail page lede. */
   lede: string;
@@ -318,7 +318,7 @@ export const projects: readonly Project[] = [
     archiveSummary:
       "Feiwin's company website, from my WBridges placement: one page on a Bootstrap template in English, Chinese and Filipino, a carousel of the studio's games, job listings with detail modals and an application form. I built most of it and handled deployment and hosting.",
     oneLiner:
-      "Three-language company and careers site for a Cavite game studio; built most of it and deployed it.",
+      "A game studio's three-language company and careers site; built most of it, deployed it.",
     lede: "The company website of Feiwin, which describes itself as a mobile and web game-development studio in Cavite. I built most of it during my placement through WBridges, on a Bootstrap template: one scrolling page in English, Chinese and Filipino with the studio's services, its game art and a careers section that takes applications. Then I deployed and hosted it. It went up in 2023 and is still live.",
     highlights: [
       {

@@ -46,9 +46,12 @@ const pad = (n: number) => String(n).padStart(2, "0");
 export function RailControls({
   railId,
   count,
+  version,
 }: {
   railId: string;
   count: number;
+  /** Changes when the rail's slides are swapped (a new deal), so the listeners rebind to the new ones. */
+  version?: string;
 }) {
   const [range, setRange] = useState<Range | null>(null);
   // `n` keys the status text, so a press that repeats the last message still changes the DOM and is announced.
@@ -60,6 +63,8 @@ export function RailControls({
     const rail = document.getElementById(railId);
     if (!rail) return;
     const slides = Array.from(rail.children) as HTMLElement[];
+    // New slides: any in-flight target refers to the old ones.
+    pending.current = null;
 
     const update = () => {
       // Mid-swipe there can be a moment with nothing fully in view; keep the last range.
@@ -106,7 +111,8 @@ export function RailControls({
       rail.removeEventListener("scrollend", settle);
       rail.removeEventListener("focusin", reveal);
     };
-  }, [railId]);
+    // `version` is read only to re-run this when the slides change; the last range stays shown meanwhile.
+  }, [railId, version]);
 
   const go = (dir: 1 | -1) => {
     const rail = document.getElementById(railId);
@@ -138,8 +144,8 @@ export function RailControls({
     setStatus(({ n }) => ({
       text:
         perView === 1
-          ? `Project ${target.first + 1} of ${count}${title ? `: ${title}` : ""}`
-          : `Projects ${target.first + 1} to ${target.last + 1} of ${count}`,
+          ? `Card ${target.first + 1} of ${count}${title ? `: ${title}` : ""}`
+          : `Cards ${target.first + 1} to ${target.last + 1} of ${count}`,
       n: n + 1,
     }));
   };

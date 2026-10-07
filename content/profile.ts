@@ -57,36 +57,81 @@ export const promo = {
 /*
  * The About section, the first thing after the promo. Sourced only from the
  * résumé and content/experience.ts: every employer, number and tool named
- * here appears there.
+ * here appears there. Short on purpose: one summary paragraph shows, the
+ * story sits behind "More about me", and the proof lives in the
+ * capability tabs below it.
  */
 export const about = {
-  headline: "I'm Avel, a full-stack engineer in Metro Manila.",
+  headline: "I'm Avel, a full-stack engineer.",
   headlineAccent: "Payments, online stores and real-time apps.",
-  paragraphs: [
-    "I started in 2019 with part-time WordPress work: site speed, SEO and custom plugins. Since then I've worked across the whole stack: Node.js services behind ExpressPay's branch system and its PayMaya and GCash payments, real-money gaming inside the GCash app, a Telegram bot with in-chat payments, and real-time lotto products in React over WebSocket.",
-    "Today I freelance for clients in Australia and the Philippines, mostly PHP and WooCommerce on live stores. The biggest so far: taking Signal One International live with about 5,100 orders carried across, then fixing its Stripe webhooks in production.",
-    "Outside client work I build my own apps to learn something new each time. The latest is AMYGO, the 3D gym above, in React and three.js.",
+  summary:
+    "For six years I've built and maintained production systems, database to UI. Today I freelance for clients in Australia and the Philippines, mostly PHP and WordPress, most recently taking a WooCommerce store live.",
+  story: [
+    "I started in 2019 with part-time WordPress work: site speed, SEO and custom plugins. Since then I've worked across the stack, from Node.js services behind ExpressPay's branch system to real-money gaming inside the GCash app and a Telegram bot with in-chat payments.",
+    "Outside client work I build my own apps to learn something new each time. The latest is AMYGO, the 3D gym at the top of this page, in React and three.js.",
   ],
   facts: [
-    { term: "Based in", detail: "Metro Manila, Philippines · UTC+8" },
+    { term: "Based in", detail: "Metro Manila, Philippines (UTC+8)" },
     { term: "Looking for", detail: "Remote full-stack work" },
-    { term: "Shipping since", detail: "2019, full-time since Feb 2020" },
-    { term: "Daily drivers", detail: "React, Next.js, Node.js / Express, PHP / WordPress, TypeScript" },
+    { term: "Experience", detail: "Since 2019, full-time since Feb 2020" },
     { term: "Education", detail: "BS Computer Science, Manuel S. Enverga University" },
   ],
 } as const;
 
+export type Capability = {
+  id: string;
+  /** The tab's name: the three themes of the About headline, in its order. */
+  name: string;
+  value: string;
+  label: string;
+  /** What backs the number, one line each. Every line traces to experience.ts or projects.ts. */
+  proof: readonly string[];
+  link: { label: string; href: string };
+};
+
 /*
- * Every figure traces to the résumé: the Signal One migration, the payment
- * APIs at ExpressPay (GCash, PayMaya), SNSoft (Telegram) and freelance
- * (Stripe), full-time work since Feb 2020, and the Technicare bug count.
+ * The About section's proof, as tabs: each figure traces to the résumé (the
+ * payment APIs at ExpressPay, SNSoft and freelance; the Signal One
+ * migration; the Technicare bug count), and each line to a role or project.
  */
-export const careerStats = [
-  { value: "~5,100", label: "Orders migrated to a live store, none lost" },
-  { value: "4", label: "Payment APIs worked on in production: Stripe, GCash, PayMaya, Telegram" },
-  { value: "6+", label: "Years shipping, database to UI" },
-  { value: "100+", label: "Bugs closed on real-time lotto products" },
-] as const;
+export const capabilities: readonly Capability[] = [
+  {
+    id: "payments",
+    name: "Payments",
+    value: "4",
+    label: "Payment APIs worked on in production",
+    proof: [
+      "Stripe at Signal One: traced live webhook failures to a signing-secret mismatch and reconciled the orders paid during the outage.",
+      "PayMaya and GCash integrations at ExpressPay, for cross-channel transactions.",
+      "Telegram's native in-chat payments in the Casino Plus bot.",
+    ],
+    link: { label: "Signal One case study", href: "/projects/signal-one" },
+  },
+  {
+    id: "stores",
+    name: "Online stores",
+    value: "~5,100",
+    label: "Orders migrated, none lost",
+    proof: [
+      "Took Signal One live on WooCommerce, on shared cPanel hosting with no SSH, carrying across 1,156 variations and a 213MB database.",
+      "Upgraded its stack from PHP 7 to 8 and fixed page-cache conflicts serving stale HTML.",
+      "A personal project: a multi-tenant commerce backend with REST APIs and tenant-scoped auth for more than one storefront.",
+    ],
+    link: { label: "Multi-store platform", href: "/projects/multi-store-ecommerce" },
+  },
+  {
+    id: "realtime",
+    name: "Real-time apps",
+    value: "100+",
+    label: "Bugs closed on live lotto products",
+    proof: [
+      "Pick2Win, Grand Sabado and 3D Rush on lottoplay.ph, with live WebSocket feeds for rounds, results and chat.",
+      "A chat-moderation platform built from scratch and adopted across multiple game environments.",
+      "8+ versioned releases, with UAT sign-offs coordinated with QA and backend teams.",
+    ],
+    link: { label: "Full history in Experience", href: "#experience" },
+  },
+];
 
 export type Social = {
   label: string;

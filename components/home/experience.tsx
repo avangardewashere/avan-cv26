@@ -3,27 +3,11 @@
 import { useState, type CSSProperties } from "react";
 
 import { Arrow } from "@/components/ui/arrow";
-import {
-  earlierRoles,
-  earlierRolesLabel,
-  recentRoles,
-  type Role,
-} from "@/content/experience";
+import { experience, type Role } from "@/content/experience";
 // clsx, not cn: keeps tailwind-merge out of the client bundle; nothing here relies on merging.
 import { clsx } from "clsx";
 
-const earlierYears = earlierRoles
-  .flatMap((role) => role.period.match(/\d{4}/g) ?? [])
-  .map(Number);
-const earlierFrom = Math.min(...earlierYears);
-const earlierTo = Math.max(...earlierYears);
-// Names what the hidden roles were ("Backend & WordPress · 2019–2021"), not just how many.
-const earlierLabel = `${earlierRolesLabel} · ${
-  earlierFrom === earlierTo ? earlierFrom : `${earlierFrom}–${earlierTo}`
-}`;
-
 const panelId = (role: Role) => `role-${role.slug}-details`;
-const earlierListId = "experience-earlier";
 
 const glyph = "duration-lift ease-fluid transition-[rotate,opacity]";
 
@@ -39,14 +23,13 @@ function ToggleGlyphs({ open }: { open: boolean }) {
 
 export function Experience() {
   const [openSlug, setOpenSlug] = useState<string | null>(
-    recentRoles[0]?.slug ?? null,
+    experience[0]?.slug ?? null,
   );
-  const [showEarlier, setShowEarlier] = useState(false);
 
   return (
     <section
       id="experience"
-      className="defer-render scroll-mt-20 pt-(--space-section) [--defer-size:1800px] min-[480px]:[--defer-size:1370px] min-[760px]:[--defer-size:1120px] xl:[--defer-size:1100px]"
+      className="defer-render scroll-mt-20 pt-(--space-section) [--defer-size:2090px] min-[480px]:[--defer-size:1840px] min-[760px]:[--defer-size:1415px] min-[1024px]:[--defer-size:1230px] xl:[--defer-size:1160px]"
     >
       <div data-reveal>
         <p className="eyebrow">Experience</p>
@@ -60,7 +43,7 @@ export function Experience() {
         className="@container flex flex-col gap-2"
         style={{ "--i": 1 } as CSSProperties}
       >
-        {recentRoles.map((role) => {
+        {experience.map((role) => {
           const open = openSlug === role.slug;
           return (
             <li
@@ -119,21 +102,23 @@ export function Experience() {
                 >
                   <span className="flex-[0_0_150px]" />
                   <div className="min-w-0 flex-[1_1_520px]">
-                    <ul className="flex max-w-[32rem] flex-col gap-2.5">
-                      {(role.bullets ?? []).map((bullet) => (
-                        <li
-                          key={bullet}
-                          className="text-ink-soft flex gap-3 text-[14.5px] leading-[1.55]"
-                        >
-                          <span
-                            aria-hidden
-                            className="bg-accent-ink mt-[9px] size-[5px] shrink-0 rounded-full"
-                          />
-                          <span>{bullet}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <div className="mt-4 flex flex-wrap items-center gap-1.5">
+                    {role.bullets?.length ? (
+                      <ul className="mb-4 flex max-w-[32rem] flex-col gap-2.5">
+                        {role.bullets.map((bullet) => (
+                          <li
+                            key={bullet}
+                            className="text-ink-soft flex gap-3 text-[14.5px] leading-[1.55]"
+                          >
+                            <span
+                              aria-hidden
+                              className="bg-accent-ink mt-[9px] size-[5px] shrink-0 rounded-full"
+                            />
+                            <span>{bullet}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : null}
+                    <div className="flex flex-wrap items-center gap-1.5">
                       {(role.tags ?? []).map((tag) => (
                         <span key={tag} className="tag">
                           {tag}
@@ -157,63 +142,6 @@ export function Experience() {
           );
         })}
       </ol>
-
-      {earlierRoles.length > 0 ? (
-        <>
-          <button
-            type="button"
-            onClick={() => setShowEarlier((shown) => !shown)}
-            aria-expanded={showEarlier}
-            aria-controls={showEarlier ? earlierListId : undefined}
-            // The label is ~274px of the 280px a 320px phone leaves; 13px keeps it on one line there.
-            className="border-foreground/18 text-muted hover:border-foreground/40 hover:text-foreground duration-hover mt-3 inline-flex h-10 items-center gap-2.5 rounded-full border border-dashed pr-4 pl-3 text-[13.5px] whitespace-nowrap transition-[border-color,color,scale] max-[360px]:text-[13px] motion-safe:active:scale-[0.96]"
-          >
-            <span
-              aria-hidden
-              className="bg-foreground/8 inline-grid size-5 place-items-center rounded-full text-[14px] *:[grid-area:1/1]"
-            >
-              <ToggleGlyphs open={showEarlier} />
-            </span>
-            {showEarlier ? (
-              "Hide earlier roles"
-            ) : (
-              <>
-                <span className="sr-only">Earlier roles: </span>
-                {earlierLabel}
-              </>
-            )}
-          </button>
-
-          {showEarlier ? (
-            <ol
-              id={earlierListId}
-              className="duration-expand ease-fluid mt-2 flex flex-col gap-2 transition-[opacity,translate] starting:opacity-0 motion-safe:starting:-translate-y-1.5"
-            >
-              {earlierRoles.map((role) => (
-                <li
-                  key={role.slug}
-                  className="border-foreground/7 flex flex-wrap items-baseline gap-x-7 gap-y-1.5 rounded-[20px] border px-[22px] py-[18px]"
-                >
-                  <span className="text-muted flex-[0_0_150px] font-mono text-[12.5px] whitespace-nowrap">
-                    {role.period}
-                  </span>
-                  <span className="flex-[1_1_220px]">
-                    <span className="block text-[16px] font-semibold">
-                      {role.title}
-                    </span>
-                    <span className="text-muted mt-0.5 block text-[14px]">
-                      {role.company} · {role.place}
-                    </span>
-                  </span>
-                  <span className="text-muted flex-[2_1_300px] text-[14.5px] leading-[1.5]">
-                    {role.summary}
-                  </span>
-                </li>
-              ))}
-            </ol>
-          ) : null}
-        </>
-      ) : null}
     </section>
   );
 }
