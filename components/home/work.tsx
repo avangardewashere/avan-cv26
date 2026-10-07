@@ -1,34 +1,93 @@
 import Link from "next/link";
 import type { CSSProperties } from "react";
 
+import { RailControls } from "@/components/home/rail-controls";
 import { ProjectCard } from "@/components/project-card";
 import { Arrow } from "@/components/ui/arrow";
 import { pillVariants } from "@/components/ui/button";
-import { FEATURED_COUNT, countWord, projects } from "@/content/projects";
+import { countWord, projects } from "@/content/projects";
+import { cn } from "@/lib/utils";
 
+const RAIL_ID = "work-rail";
+
+/*
+ * Slide widths, so a part of the next card always shows: about 1.15 cards
+ * on a phone, cards up to 420px from 480px, 2¼ cards from 760px, 3¼ from 1120px.
+ * `sizes` follows the same widths so each banner is fetched at the size it
+ * is drawn (a 390px phone gets the 960w file, not the 1600w one).
+ */
+const SLIDE =
+  "basis-[calc(100%-48px)] min-[480px]:basis-[min(420px,calc(100%-64px))] min-[760px]:basis-[calc((100%-24px)/2.25)] min-[1120px]:basis-[calc((100%-36px)/3.25)]";
+const SLIDE_SIZES =
+  "(min-width: 1120px) 360px, (min-width: 760px) 42vw, (min-width: 480px) 420px, calc(100vw - 88px)";
+
+/**
+ * Every project as an image card in one native scroll-snap rail, then one
+ * button to the full archive. The rail is a plain scrolling list: swipe,
+ * trackpad, Shift+wheel and Tab all move it with no JavaScript, and every
+ * card stays in the tab order and the accessibility tree. RailControls only
+ * adds prev/next buttons and a counter.
+ */
+/*
+ * --defer-size: the section's content height (clientHeight less padding-top),
+ * measured once rendered at 360–1920px on 2026-10-07. Re-measure when cards change.
+ */
 export function Work() {
-  const [lead, ...others] = projects.slice(0, FEATURED_COUNT);
-  const rest = projects.slice(FEATURED_COUNT);
-
   return (
     <section
       id="work"
-      className="defer-render scroll-mt-20 pt-(--space-section) [--defer-size:2700px] min-[480px]:[--defer-size:2740px] min-[760px]:[--defer-size:1700px] min-[960px]:[--defer-size:1440px] xl:[--defer-size:1510px]"
+      className="defer-render scroll-mt-20 pt-(--space-section) [--defer-size:850px] min-[480px]:[--defer-size:765px] min-[760px]:[--defer-size:790px] min-[1120px]:[--defer-size:800px]"
     >
+      <div data-reveal className="mb-5">
+        {/* The design sets no line-height, so its labels sit at `normal`, not preflight's 1.5. */}
+        <p className="eyebrow">Selected work</p>
+        <h2 className="display mt-3 max-w-[22ch] text-[clamp(30px,3.6vw,48px)] leading-[1.02] tracking-[-0.035em] text-balance">
+          The constraint, what I did, and what it cost.
+        </h2>
+      </div>
+
+      {/* data-reveal on the wrapper, never on slides: the reveal observer watches the viewport, so clipped slides would stay hidden. */}
+      <div data-reveal style={{ "--i": 1 } as CSSProperties}>
+        {/*
+          Bleeds into the page gutter so a card can peek past the column
+          edge, while scroll-padding snaps cards back onto it. role="list":
+          Safari drops list semantics from unstyled lists. The few px of
+          vertical padding keep the cards' focus ring inside the scroller,
+          which clips on both axes. Print shows every card.
+        */}
+        <ul
+          id={RAIL_ID}
+          role="list"
+          aria-label="Projects"
+          className="mx-[calc(var(--gutter)*-1)] flex list-none snap-x snap-mandatory scroll-px-(--gutter) gap-3 overflow-x-auto overscroll-x-contain px-(--gutter) pt-2 pb-4 [scrollbar-width:thin] motion-safe:scroll-smooth print:mx-0 print:flex-wrap print:overflow-visible print:px-0"
+        >
+          {projects.map((project) => (
+            <li
+              key={project.slug}
+              className={`flex shrink-0 snap-start print:min-w-0 print:basis-[calc((100%-12px)/2)] ${SLIDE}`}
+            >
+              <ProjectCard
+                project={project}
+                headingLevel="h3"
+                sizes={SLIDE_SIZES}
+              />
+            </li>
+          ))}
+        </ul>
+      </div>
+
       <div
         data-reveal
-        className="mb-7 flex flex-wrap items-end justify-between gap-x-8 gap-y-3"
+        style={{ "--i": 2 } as CSSProperties}
+        className="mt-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-4"
       >
-        <div>
-          {/* The design sets no line-height, so its labels sit at `normal`, not preflight's 1.5. */}
-          <p className="eyebrow">Selected work</p>
-          <h2 className="display mt-3 max-w-[22ch] text-[clamp(30px,3.6vw,48px)] leading-[1.02] tracking-[-0.035em] text-balance">
-            The constraint, what I did, and what it cost.
-          </h2>
-        </div>
+        <RailControls railId={RAIL_ID} count={projects.length} />
         <Link
           href="/projects"
-          className={pillVariants({ variant: "outline", size: "md" })}
+          className={cn(
+            pillVariants({ variant: "outline", size: "lg" }),
+            "max-[479px]:w-full",
+          )}
         >
           {/* One inline run, so the arrow sits a space away rather than a flex gap. */}
           <span>
@@ -36,79 +95,6 @@ export function Work() {
           </span>
         </Link>
       </div>
-
-      {lead ? (
-        <div
-          data-reveal
-          className="group/deck relative flex"
-          style={{ "--i": 1 } as CSSProperties}
-        >
-          {/* The plates fan out a few px as the card lifts; they never take the pointer themselves. */}
-          <div
-            aria-hidden
-            className="bg-deck-2 border-foreground/5 pointer-events-none absolute inset-x-7 -bottom-[22px] h-[calc(60%+2px)] rounded-3xl border [transition:translate_450ms_var(--ease-fluid)] motion-safe:group-hover/deck:translate-y-[6px] motion-safe:group-has-[:focus-visible]/deck:translate-y-[6px]"
-          />
-          <div
-            aria-hidden
-            className="bg-deck-1 border-foreground/6 pointer-events-none absolute inset-x-3.5 -bottom-[11px] h-[calc(60%+2px)] rounded-3xl border [transition:translate_450ms_var(--ease-fluid)] motion-safe:group-hover/deck:translate-y-[3px] motion-safe:group-has-[:focus-visible]/deck:translate-y-[3px]"
-          />
-          <ProjectCard project={lead} variant="featured" lead />
-        </div>
-      ) : null}
-
-      {others.length > 0 ? (
-        <div className="mt-[34px] grid grid-cols-[repeat(auto-fit,minmax(min(100%,340px),1fr))] gap-3">
-          {others.map((project, i) => (
-            <div
-              key={project.slug}
-              data-reveal
-              className="flex"
-              style={{ "--i": Math.min(2 + i, 5) } as CSSProperties}
-            >
-              <ProjectCard project={project} variant="featured" />
-            </div>
-          ))}
-        </div>
-      ) : null}
-
-      {rest.length > 0 ? (
-        <ul
-          data-reveal
-          className="mt-9 grid list-none grid-cols-1 gap-3 p-0 min-[760px]:grid-cols-3"
-        >
-          {rest.map((project) => (
-            <li
-              key={project.slug}
-              className="border-foreground/7 hover:border-foreground/18 flex flex-col gap-2 rounded-[18px] border px-5 py-[18px] transition-[border-color] duration-300"
-            >
-              <div className="flex items-baseline justify-between gap-3">
-                <Link
-                  href={`/projects/${project.slug}`}
-                  className="text-[16px] font-semibold"
-                >
-                  {project.title}
-                </Link>
-                <span className="text-subtle font-mono text-[11px]">
-                  {project.year}
-                </span>
-              </div>
-              <p className="text-muted text-sm leading-[1.5]">
-                {project.oneLiner}
-              </p>
-              {project.href ? (
-                <a
-                  href={project.href}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="group/arrow text-accent-ink self-start text-[13px] font-medium"
-                >
-                  {project.hrefLabel ?? "Live app"} <Arrow dir="up-right" />
-                </a>
-              ) : null}
-            </li>
-          ))}
-        </ul>
-      ) : null}
     </section>
   );
 }

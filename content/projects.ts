@@ -84,17 +84,20 @@ export type Project = {
   /** The headline number on cards, e.g. "~5,100". */
   metric: string;
   metricLabel: string;
-  /** Homepage "Selected work" card. */
+  /**
+   * The longer card summary. Not rendered since the homepage moved to the
+   * carousel (which uses `archiveSummary`); kept as written copy.
+   */
   summary: string;
-  /** /projects archive card. */
+  /** Every project card: the homepage carousel and the /projects archive. */
   archiveSummary: string;
-  /** Homepage "more work" list. */
+  /** One line. Not rendered since the "more work" list became the carousel; kept as written copy. */
   oneLiner: string;
   /** Detail page lede. */
   lede: string;
   /** Detail page "What shipped" list when there is no case study. */
   highlights: readonly Line[];
-  /** Full stack. Homepage cards show the first four. */
+  /** Full stack, listed on the detail page. */
   stack: readonly string[];
   /** The live, visitable site. Omitted when the work is private or client-owned. */
   href?: string;
@@ -109,10 +112,11 @@ export type Project = {
 };
 
 /**
- * Order matters: the first three are the homepage's "Selected work" (the
- * full-stack positioning leads with the server-side work), the rest
- * go in the list under them, and "Next project" on detail pages walks this
- * order and wraps.
+ * Order matters: the homepage carousel, the /projects archive and "Next
+ * project" on detail pages all walk it (the last wrapping to the first).
+ * The server-side work leads, since that is the full-stack positioning, and
+ * fills the carousel's first desktop view; AMYGO, which the hero promotes,
+ * comes straight after it.
  */
 export const projects: readonly Project[] = [
   {
@@ -270,6 +274,34 @@ export const projects: readonly Project[] = [
     },
   },
   {
+    slug: "gym3d",
+    discipline: "Front end",
+    title: "AMYGO",
+    group: "Personal",
+    kind: "Personal · 3D web app",
+    year: "2026",
+    metric: "17",
+    metricLabel: "exercises on 12 machines",
+    summary:
+      "A whole gym you can walk into, in the browser. Walk in, pick a machine and the person trains; switch to build mode and rearrange the floor.",
+    archiveSummary:
+      "A walkable 3D gym: 17 animated exercises on 12 machines, 28 pieces to rearrange in build mode, and phone controls.",
+    oneLiner: "Walkable 3D gym: 17 exercises, 12 machines, a build mode.",
+    lede: "AMYGO (MYG is GYM, backwards) is a whole gym you can walk into, in the browser. Walk in, pick a machine and the person performs the exercise, with hands and feet that follow the handles, pedals and bars; switch to build mode and drag the equipment into a new layout.",
+    highlights: [
+      "17 exercises on 12 machines, from bicep curls and treadmill sprints to back squats, rows and pull-ups",
+      "Hands and feet solved to the machine every frame (arm and leg IK), checked by tests that fail when they drift apart",
+      "Build mode: drag, snap and turn any of 28 pieces on a zoned floor, solid to walk into, layout remembered in the browser",
+      "Painted walls, a mirror and zone names, so the floor reads as a real gym",
+      "Phone-ready: an on-screen joystick, and quality that steps down on its own when frames slow",
+    ],
+    stack: ["React", "Three.js", "React Three Fiber", "TypeScript", "Vite", "Vitest"],
+    media: banner(
+      "gym3d",
+      "AMYGO poster: a low-poly lifter back-squats in the free-weights zone, beside the line Walk in. Pick a machine. Train. and the figures 12 machines, 17 exercises, 28 pieces to rearrange.",
+    ),
+  },
+  {
     slug: "feiwin",
     title: "Feiwin Company Website",
     shortTitle: "Feiwin",
@@ -358,34 +390,6 @@ export const projects: readonly Project[] = [
     ),
   },
   {
-    slug: "gym3d",
-    discipline: "Front end",
-    title: "AMYGO",
-    group: "Personal",
-    kind: "Personal · 3D web app",
-    year: "2026",
-    metric: "17",
-    metricLabel: "exercises on 12 machines",
-    summary:
-      "A whole gym you can walk into, in the browser. Walk in, pick a machine and the person trains; switch to build mode and rearrange the floor.",
-    archiveSummary:
-      "A walkable 3D gym: 17 animated exercises on 12 machines, 28 pieces to rearrange in build mode, and phone controls.",
-    oneLiner: "Walkable 3D gym: 17 exercises, 12 machines, a build mode.",
-    lede: "AMYGO (MYG is GYM, backwards) is a whole gym you can walk into, in the browser. Walk in, pick a machine and the person performs the exercise, with hands and feet that follow the handles, pedals and bars; switch to build mode and drag the equipment into a new layout.",
-    highlights: [
-      "17 exercises on 12 machines, from bicep curls and treadmill sprints to back squats, rows and pull-ups",
-      "Hands and feet solved to the machine every frame (arm and leg IK), checked by tests that fail when they drift apart",
-      "Build mode: drag, snap and turn any of 28 pieces on a zoned floor, solid to walk into, layout remembered in the browser",
-      "Painted walls, a mirror and zone names, so the floor reads as a real gym",
-      "Phone-ready: an on-screen joystick, and quality that steps down on its own when frames slow",
-    ],
-    stack: ["React", "Three.js", "React Three Fiber", "TypeScript", "Vite", "Vitest"],
-    media: banner(
-      "gym3d",
-      "AMYGO poster: a low-poly lifter back-squats in the free-weights zone, beside the line Walk in. Pick a machine. Train. and the figures 12 machines, 17 exercises, 28 pieces to rearrange.",
-    ),
-  },
-  {
     slug: "sipat",
     discipline: "Front end",
     title: "Sipat",
@@ -471,9 +475,6 @@ export const projects: readonly Project[] = [
 ];
 
 export const projectGroups = ["All", "Client", "Employment", "Personal"] as const;
-
-/** Homepage "Selected work" count; the rest render as the list below. */
-export const FEATURED_COUNT = 3;
 
 export function getProject(slug: string) {
   return projects.find((p) => p.slug === slug);

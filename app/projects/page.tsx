@@ -29,7 +29,7 @@ export default function ProjectsPage() {
   const items = projects.map((project) => ({
     slug: project.slug,
     group: project.group,
-    card: <ProjectCard project={project} variant="archive" />,
+    card: <ProjectCard project={project} />,
   }));
 
   return (
