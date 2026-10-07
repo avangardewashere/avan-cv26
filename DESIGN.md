@@ -42,7 +42,8 @@ The brand lime is more saturated than a generic accent on purpose. It appears in
   - Each bar has a 28 × 44px hit area.
   - The current project's name sits beside the bars in uppercase mono, white on the chip.
 - **Over any media,** text and marks only ever sit on the Media Chip (70% near-black plus blur). Over the brightest frame that backing stays at roughly 6:1 or better for white text. Inactive bars clear 3:1 against it.
-- **One Pause control** holds both the video and the countdown to the next promo. Sound appears only where a video has an audio track. Every control is at least 44px.
+- **A 2px progress line** runs along the hero's bottom edge: Lime Signal on the Media Chip's near-black, filling over the video plus the 5-second banner hold. It reaches the end exactly when the next promo starts, and it hides when nothing comes next (the last promo, after the visitor picks a slide, reduced motion).
+- **One Pause control** holds the video, the countdown to the next promo and the progress line. Sound appears only where a video has an audio track. Every control is at least 44px.
 - **No overlap:** controls live in their own bottom band.
   - On tall screens, the banner is shown whole between the header and that band.
   - On wide screens it bleeds, with the type side anchored so cropping only ever trims imagery.

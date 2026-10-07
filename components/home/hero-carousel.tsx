@@ -135,13 +135,51 @@ export function HeroCarousel() {
     videos.current[0]?.play().catch(() => {});
   }, []);
 
-  // The hold on a banner before the next promo; paused while held.
   const phase = phases[index];
+
+  /*
+   * The progress line and the move to the next promo share one clock: the
+   * line fills over the video plus PROMO_BANNER_SECONDS, and reaching the
+   * end is what advances, so the two can never drift apart. Written to the
+   * DOM each frame (no React state per frame). Pause freezes both; a
+   * resumed countdown carries on from where it stopped.
+   */
+  const line = useRef<HTMLDivElement>(null);
+  const fill = useRef<HTMLDivElement>(null);
+  const bannerElapsed = useRef(0);
   useEffect(() => {
-    if (reduced || manual || held || phase !== "banner" || index >= count - 1)
-      return;
-    const timer = window.setTimeout(advance, PROMO_BANNER_SECONDS * 1000);
-    return () => window.clearTimeout(timer);
+    bannerElapsed.current = 0;
+  }, [index, phase]);
+  useEffect(() => {
+    const running = !reduced && !manual && index < count - 1;
+    if (line.current) line.current.style.opacity = running ? "1" : "0";
+    if (!running) return;
+    const video = videos.current[index];
+    const hold = PROMO_BANNER_SECONDS * 1000;
+    let frame = 0;
+    let last = performance.now();
+    const tick = (now: number) => {
+      const length =
+        video && Number.isFinite(video.duration) ? video.duration * 1000 : 0;
+      // Capped per frame: frames stop in a background tab, and time away should not count.
+      if (phase === "banner" && !held)
+        bannerElapsed.current += Math.min(now - last, 100);
+      last = now;
+      if (phase === "banner" && bannerElapsed.current >= hold) {
+        advance();
+        return;
+      }
+      const done =
+        phase === "video"
+          ? (video?.currentTime ?? 0) * 1000
+          : length + bannerElapsed.current;
+      const progress = length + hold > 0 ? done / (length + hold) : 0;
+      if (fill.current)
+        fill.current.style.transform = `scaleX(${Math.min(progress, 1)})`;
+      frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
   }, [index, phase, held, reduced, manual, count]);
 
   // Swipes: whichever slide is mostly in view becomes the current one.
@@ -427,6 +465,24 @@ export function HeroCarousel() {
             </button>
           ) : null}
         </div>
+      </div>
+
+      {/*
+        Time to the next promo: a 2px line along the bottom edge, lime on the
+        chip's near-black so it reads over any frame. Hidden when nothing
+        comes next (the last promo, after the visitor picks a slide, reduced
+        motion). Decorative: Pause and the pagination carry the meaning.
+      */}
+      <div
+        ref={line}
+        aria-hidden
+        className="duration-hover bg-media-chip pointer-events-none absolute inset-x-0 bottom-0 h-[2px] opacity-0 transition-opacity"
+      >
+        <div
+          ref={fill}
+          className="bg-accent h-full origin-left"
+          style={{ transform: "scaleX(0)" }}
+        />
       </div>
 
       {/* Announces slide changes the visitor made; the automatic ones stay quiet. */}
