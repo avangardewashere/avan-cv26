@@ -22,37 +22,105 @@ export const profile = {
 /** `tel:` form of the phone number. */
 export const phoneHref = `tel:${profile.phone.replace(/\s/g, "")}`;
 
+type PromoImage = { srcSet: string; width: number; height: number };
+
+export type Promo = {
+  id: string;
+  /** Shown in the pagination and read by screen readers. */
+  title: string;
+  /** The slide's accessible description. */
+  label: string;
+  /** The media's own edge colour, so letterboxing on tall screens is seamless. */
+  edge: string;
+  video: {
+    src1080: string;
+    src720: string;
+    /** The video's own first frame, shown while it loads. */
+    poster: string;
+    /** No audio track, no sound button. */
+    audio: boolean;
+  };
+  banner: {
+    landscape: PromoImage;
+    /** Tall screens; without one, the landscape banner shows whole. */
+    portrait?: PromoImage;
+    alt: string;
+    /**
+     * How a landscape banner meets a screen of another shape. "left": the
+     * type sits on the left, so narrower screens trim the photo on the right
+     * and very wide ones fade it out. "whole": every part matters, so it is
+     * only cropped near 16:9 and shown whole otherwise.
+     */
+    fit: "left" | "whole";
+  };
+  projectHref: string;
+};
+
+/** How long a banner holds before the hero moves on to the next promo. */
+export const PROMO_BANNER_SECONDS = 5;
+
 /*
- * The first screen: the AMYGO promo video (public/media), which plays
- * through once and then settles on the poster, art-directed per screen
- * shape. Re-encoded from the 23 MB 1080p60 master to 30 fps H.264 with
- * faststart, so it starts before it has finished downloading; phones get
- * the 720p cut. The figures on the poster are AMYGO's own.
+ * The first screen: each promo plays its video once, then settles on its
+ * banner; after PROMO_BANNER_SECONDS the next one starts, and the last
+ * banner stays. Videos are re-encoded to 30 fps H.264 with faststart, so
+ * they start before they finish downloading; phones get the 720p cut. The
+ * figures on the banners are the projects' own.
  */
-export const promo = {
-  label: "AMYGO promo: a whole gym you can walk into, in your browser",
-  /** Full plays before the poster takes over. */
-  plays: 1,
-  src1080: "/media/gym3d-promo-1080.mp4",
-  src720: "/media/gym3d-promo-720.mp4",
-  /** The video's own first frame, shown while it loads. */
-  videoPoster: "/media/gym3d-promo-poster.webp",
-  landscape: {
-    srcSet:
-      "/media/amygo-landscape-1920.webp 1920w, /media/amygo-landscape-2880.webp 2880w",
-    width: 1920,
-    height: 1080,
+export const promos: readonly Promo[] = [
+  {
+    id: "amygo",
+    title: "AMYGO",
+    label: "AMYGO: a whole gym you can walk into, in your browser",
+    edge: "#0b0c0e",
+    video: {
+      src1080: "/media/gym3d-promo-1080.mp4",
+      src720: "/media/gym3d-promo-720.mp4",
+      poster: "/media/gym3d-promo-poster.webp",
+      audio: true,
+    },
+    banner: {
+      landscape: {
+        srcSet:
+          "/media/amygo-landscape-1920.webp 1920w, /media/amygo-landscape-2880.webp 2880w",
+        width: 1920,
+        height: 1080,
+      },
+      portrait: {
+        srcSet:
+          "/media/amygo-portrait-1080.webp 1080w, /media/amygo-portrait-1620.webp 1620w",
+        width: 1080,
+        height: 1920,
+      },
+      alt: "AMYGO, a gym in your browser. Walk in. Pick a machine. Train. A low-poly lifter back-squats at a rack in the free-weights zone. 12 machines, 17 exercises, 28 pieces to rearrange. Built with React, three.js and React Three Fiber.",
+      fit: "left",
+    },
+    projectHref: "/projects/gym3d",
   },
-  portrait: {
-    srcSet:
-      "/media/amygo-portrait-1080.webp 1080w, /media/amygo-portrait-1620.webp 1620w",
-    width: 1080,
-    height: 1920,
+  {
+    id: "buildos",
+    title: "BuildOS",
+    label:
+      "BuildOS: an offline Android project manager that breaks any project down to the last step",
+    edge: "#0f0f0f",
+    video: {
+      src1080: "/media/buildos-promo-1080.mp4",
+      src720: "/media/buildos-promo-720.mp4",
+      poster: "/media/buildos-promo-poster.webp",
+      audio: false,
+    },
+    banner: {
+      landscape: {
+        srcSet:
+          "/media/buildos-banner-1280.webp 1280w, /media/buildos-banner-1920.webp 1920w",
+        width: 1920,
+        height: 1080,
+      },
+      alt: "BuildOS. Break it down. Watch it roll up. An offline Android project manager that breaks any project down to the last step. A project tree eight levels deep, from Indie app launch to Validate input, every level at 100%. Offline, no account, Android.",
+      fit: "whole",
+    },
+    projectHref: "/projects/buildos",
   },
-  posterAlt:
-    "AMYGO, a gym in your browser. Walk in. Pick a machine. Train. A low-poly lifter back-squats at a rack in the free-weights zone. 12 machines, 17 exercises, 28 pieces to rearrange. Built with React, three.js and React Three Fiber.",
-  projectHref: "/projects/gym3d",
-} as const;
+];
 
 /*
  * The About section, the first thing after the promo. Sourced only from the
