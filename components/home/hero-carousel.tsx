@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useEffect, useEffectEvent, useRef, useState } from "react";
 
 import { PROMO_BANNER_SECONDS, promos, type Promo } from "@/content/profile";
+import { afterSplash } from "@/lib/splash";
 
 const REDUCE = "(prefers-reduced-motion: reduce)";
 
@@ -157,11 +158,17 @@ export function HeroCarousel() {
       setPhases(phasesRef.current);
       return;
     }
-    // Every source may have failed before hydration attached onError.
-    if (videos.current[0]?.networkState === HTMLMediaElement.NETWORK_NO_SOURCE)
-      return settleFirst();
-    videos.current[0]?.play().catch((error: unknown) => {
-      if (!isAbort(error)) settleFirst();
+    // Under the first-visit splash, AMYGO waits for it (the splash starts it just before it lifts).
+    return afterSplash(() => {
+      const first = videos.current[0];
+      if (!first || indexRef.current !== 0 || phasesRef.current[0] !== "video")
+        return;
+      // Every source may have failed before hydration attached onError.
+      if (first.networkState === HTMLMediaElement.NETWORK_NO_SOURCE)
+        return settleFirst();
+      first.play().catch((error: unknown) => {
+        if (!isAbort(error)) settleFirst();
+      });
     });
   }, []);
 

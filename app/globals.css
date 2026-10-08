@@ -86,12 +86,12 @@
   --glow-accent-soft: rgb(200 255 77 / 0.1);
 
   --shadow-nav: 0 10px 40px -10px rgb(0 0 0 / 0.6);
-  --shadow-stat: 0 24px 50px -28px rgb(0 0 0 / 0.9),
-    inset 0 1px 0 rgb(255 255 255 / 0.06);
-  --shadow-panel: 0 20px 50px -30px rgb(0 0 0 / 0.9),
-    inset 0 1px 0 rgb(255 255 255 / 0.05);
-  --shadow-open: 0 30px 70px -30px rgb(0 0 0 / 0.95),
-    inset 0 1px 0 rgb(255 255 255 / 0.06);
+  --shadow-stat:
+    0 24px 50px -28px rgb(0 0 0 / 0.9), inset 0 1px 0 rgb(255 255 255 / 0.06);
+  --shadow-panel:
+    0 20px 50px -30px rgb(0 0 0 / 0.9), inset 0 1px 0 rgb(255 255 255 / 0.05);
+  --shadow-open:
+    0 30px 70px -30px rgb(0 0 0 / 0.95), inset 0 1px 0 rgb(255 255 255 / 0.06);
   --shadow-contact: 0 40px 90px -40px rgb(200 255 77 / 0.35);
   /* The inner plate of a double-bezel tray: a top highlight, no drop shadow. */
   --shadow-core: inset 0 1px 0 rgb(255 255 255 / 0.06);
@@ -126,12 +126,12 @@
   --glow-accent-soft: rgb(180 235 50 / 0.16);
 
   --shadow-nav: 0 10px 40px -12px rgb(20 20 30 / 0.18);
-  --shadow-stat: 0 24px 50px -30px rgb(20 20 30 / 0.2),
-    inset 0 1px 0 rgb(255 255 255 / 0.9);
-  --shadow-panel: 0 20px 50px -32px rgb(20 20 30 / 0.18),
-    inset 0 1px 0 rgb(255 255 255 / 0.9);
-  --shadow-open: 0 30px 70px -34px rgb(20 20 30 / 0.24),
-    inset 0 1px 0 rgb(255 255 255 / 0.9);
+  --shadow-stat:
+    0 24px 50px -30px rgb(20 20 30 / 0.2), inset 0 1px 0 rgb(255 255 255 / 0.9);
+  --shadow-panel:
+    0 20px 50px -32px rgb(20 20 30 / 0.18), inset 0 1px 0 rgb(255 255 255 / 0.9);
+  --shadow-open:
+    0 30px 70px -34px rgb(20 20 30 / 0.24), inset 0 1px 0 rgb(255 255 255 / 0.9);
   --shadow-contact: 0 40px 90px -40px rgb(120 170 20 / 0.45);
   --shadow-core: inset 0 1px 0 rgb(255 255 255 / 0.9);
 }
@@ -413,6 +413,269 @@
   }
 }
 
+/*
+ * The first-visit splash (components/splash/splash.tsx; its times are in
+ * lib/splash.ts: 3 s before it can be skipped, gone by 5 s). Hidden unless
+ * its inline script marked <html data-splash>. Every animation starts on the
+ * splash's first frame, the same clock the script uses. Always dark, like
+ * the hero it opens onto (`.dark` on #splash scopes the dark tokens).
+ */
+#splash {
+  display: none;
+}
+
+:root[data-splash] #splash {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  touch-action: none;
+  /*
+   * The cap: holds, fades out between 5.0 and 5.2 s, then stops catching
+   * input, even if the script is held up by a long task. Two animations:
+   * the fade is opacity alone, which the compositor runs without the main
+   * thread (visibility in the same animation would keep it off it). Held in
+   * the keyframes (fill both, no delay) for the same reason.
+   */
+  animation:
+    splash-cap-fade 5200ms linear both,
+    splash-cap-hide 5200ms step-end both;
+}
+
+@keyframes splash-cap-fade {
+  0%,
+  96.15% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes splash-cap-hide {
+  0% {
+    visibility: visible;
+  }
+  100% {
+    visibility: hidden;
+  }
+}
+
+.splash-inner {
+  /* The peek width: fits a phone, and a short landscape screen top to bottom. */
+  --deck: min(
+    480px,
+    calc(100vw - 32px),
+    max(160px, calc((100svh - 330px) * 16 / 9))
+  );
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: clamp(20px, 4svh, 36px);
+  padding: 24px 16px;
+  overflow: hidden;
+  background-color: var(--background);
+  color: var(--foreground);
+  transition: opacity 200ms var(--ease-exit);
+}
+
+:root[data-splash="lift"] .splash-inner {
+  opacity: 0;
+}
+
+.splash-brand {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.splash-mark {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 6px;
+  border-radius: 9999px;
+  background-color: var(--accent);
+  color: var(--accent-foreground);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  /* The header's mark scaled up: 12px in 28px there. */
+  font-size: 20.5px;
+  font-weight: 500;
+}
+
+.splash-name {
+  font-size: min(44px, 11vw);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  white-space: nowrap;
+}
+
+.splash-role {
+  color: var(--muted);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.splash-mark,
+.splash-name,
+.splash-role {
+  animation: splash-rise 600ms var(--ease-fluid) both;
+}
+
+.splash-name {
+  animation-delay: 120ms;
+}
+
+.splash-role {
+  animation-delay: 240ms;
+}
+
+@keyframes splash-rise {
+  from {
+    opacity: 0;
+    translate: 0 10px;
+  }
+}
+
+/* One cell: each peek fades in over the one before, about a second apart. */
+.splash-deck {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  width: var(--deck);
+}
+
+.splash-peek {
+  grid-area: 1 / 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  min-width: 0;
+  margin: 0;
+  background-color: var(--background);
+  animation: splash-peek 600ms var(--ease-fluid) both;
+  animation-delay: calc(200ms + var(--i) * 950ms);
+}
+
+.splash-peek img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  border: 1px solid rgb(255 255 255 / 0.08);
+  border-radius: 16px;
+  background-color: var(--surface);
+  object-fit: cover;
+}
+
+.splash-peek figcaption {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  color: var(--muted);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.splash-peek figcaption > span:first-child {
+  min-width: 0;
+}
+
+.splash-peek figcaption > span:last-child {
+  flex-shrink: 0;
+}
+
+/* Held until the first banner has decoded (the script sets data-peek). */
+:root[data-splash]:not([data-peek]) .splash-peek {
+  animation-play-state: paused;
+}
+
+/* A slow connection: one peek, so the other four are never fetched. */
+:root[data-peeks="one"] .splash-peek:not(:first-child) {
+  display: none;
+}
+
+/* Too short for the peek (a phone on its side at high zoom): the name alone. */
+@media (max-height: 300px) {
+  .splash-deck {
+    display: none;
+  }
+}
+
+@keyframes splash-peek {
+  from {
+    opacity: 0;
+    scale: 1.03;
+  }
+}
+
+/* Time to the hero: 2px of lime over the full 5 s, like the hero's own line. */
+.splash-line {
+  width: var(--deck);
+  height: 2px;
+  overflow: hidden;
+  border-radius: 2px;
+  background-color: rgb(255 255 255 / 0.1);
+}
+
+.splash-line > span {
+  display: block;
+  height: 100%;
+  background-color: var(--accent);
+  transform-origin: left;
+  animation: splash-fill 5000ms linear both;
+}
+
+@keyframes splash-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* In the corner, out of the stack's flow: appears at 3 s. */
+.splash-skip {
+  position: absolute;
+  right: max(clamp(16px, 3vw, 32px), env(safe-area-inset-right));
+  bottom: max(clamp(16px, 3vw, 32px), env(safe-area-inset-bottom));
+  height: 44px;
+  padding-inline: 20px;
+  border: 1px solid rgb(255 255 255 / 0.14);
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 200ms var(--ease-soft);
+  animation: splash-skip 5200ms linear both;
+}
+
+.splash-skip:hover {
+  background-color: rgb(255 255 255 / 0.06);
+}
+
+/*
+ * Visibility only up to 3 s: after that it follows the splash, so the pill
+ * can never outlast the cap and catch input on an invisible splash.
+ */
+@keyframes splash-skip {
+  0%,
+  57.69% {
+    opacity: 0;
+    visibility: hidden;
+  }
+  63.46%,
+  100% {
+    opacity: 1;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -437,6 +700,10 @@
 }
 
 @media print {
+  #splash {
+    display: none !important;
+  }
+
   [data-reveal] {
     opacity: 1 !important;
     translate: none !important;

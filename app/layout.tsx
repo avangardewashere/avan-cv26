@@ -5,6 +5,7 @@ import localFont from "next/font/local";
 import { RevealObserver } from "@/components/reveal-observer";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SiteHeader } from "@/components/site-header";
+import { Splash } from "@/components/splash/splash";
 import { profile } from "@/content/profile";
 import { siteUrl } from "@/lib/site";
 import "./globals.css";
@@ -133,6 +134,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         scroll container and silently break the sticky aside on detail pages.
       */}
       <body className="relative min-h-full overflow-x-clip">
+        {/* First, so its inline script runs before any page content is parsed. */}
+        <Splash />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}

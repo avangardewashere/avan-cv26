@@ -49,6 +49,22 @@ The brand lime is more saturated than a generic accent on purpose. It appears in
   - On wide screens it bleeds, with the type side anchored so cropping only ever trims imagery.
 - **When it stops moving on its own:** reduced motion starts on the banners and never advances by itself. Once a visitor picks a slide by swiping or tapping a bar, auto-advance stops too.
 
+## 5a. First-Visit Splash
+
+- **When:** only on the first page load of a visit, and only on the homepage. A refresh, coming back from a project page, a `/#section` link, crawlers, Save-Data and reduced motion all skip it.
+- **What:**
+  - always dark, whatever the theme;
+  - the AP mark (Lime Signal disc) above the name in the display face, with the role in uppercase mono below;
+  - a sneak peek of five projects as their banners, each fading in over the last about a second apart, with title and year in mono;
+  - a 2px Lime Signal line filling over the full run.
+- **Photos, never video:** the splash exists to give the hero's video time to load, and a preview video would compete with it for bandwidth.
+- **Timing:**
+  - Nothing ends it before 3 s.
+  - From 3 s, a Skip pill appears, and Skip, Enter, Escape, Space, a scroll key, the wheel or a tap end it.
+  - At 5 s it fades out over 200 ms on its own. A CSS animation enforces this even if the main thread is busy.
+  - AMYGO starts under the cover just before the end and is rewound, so the hero opens on its first frame moving.
+- **It covers the page, never hides it:** the page underneath stays painted at full opacity, so the hero's poster still counts as the phone LCP.
+
 ## 6. Layout Principles
 
 - One column of content, 1200px max, with a fluid `--gutter` (clamp 20–40px) shared by anything that bleeds into it.
