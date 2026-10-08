@@ -13,10 +13,11 @@ export const profile = {
   email: "aveldpanaligan@gmail.com",
   phone: "+63 991 029 8335",
   /*
-   * Points at the file that is actually in /public. Swap the extension the
-   * moment a PDF export exists.
+   * The PDF in /public; both buttons download it, so its file name is the
+   * one recruiters keep. /Resume-Panaligan.docx holds the same résumé as a
+   * Word file for job portals, at the URL older links still use.
    */
-  resumeHref: "/Resume-Panaligan.docx",
+  resumeHref: "/Avel-Panaligan-Full-Stack-Developer-Resume.pdf",
 } as const;
 
 /** `tel:` form of the phone number. */
