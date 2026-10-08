@@ -159,7 +159,7 @@ export const about = {
   headline: "I'm Avel, a full-stack engineer.",
   headlineAccent: "Payments, online stores and real-time apps.",
   summary:
-    "For six years I've built and maintained production systems end to end. Lately that means React, Next.js and TypeScript on the front; Node.js, Express and PHP behind them; and the REST APIs and payment integrations that join them. Today I freelance for clients in Australia and the Philippines, most recently taking a WooCommerce store live.",
+    "For six years I've built and maintained production systems end to end: React, Next.js and TypeScript on the front; Node.js, Express and PHP services behind them, with REST and GraphQL APIs, payment integrations and webhooks over MySQL, PostgreSQL and MongoDB. I've also built on ServiceNow, writing Business Rules and Script Includes and automating service-request workflows. Today I freelance for clients in Australia and the Philippines, most recently taking a WooCommerce store live.",
   story: [
     "I started in 2019 with part-time WordPress work: site speed, SEO and custom plugins. Since then I've worked across the stack, from Node.js services behind ExpressPay's branch system to real-money gaming inside the GCash app and a Telegram bot with in-chat payments. From ExpressPay onward every team I joined ran Agile sprints; from WBridges onward we also reviewed each other's code.",
     "Outside client work I build my own apps to learn something new each time. The latest is AMYGO, the 3D gym at the top of this page, in React and three.js.",

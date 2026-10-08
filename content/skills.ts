@@ -54,6 +54,7 @@ export const skillGroups: readonly SkillGroup[] = [
     layer: "03",
     items: [
       { name: "SQL" },
+      { name: "MySQL" },
       { name: "PostgreSQL" },
       { name: "MongoDB" },
       { name: "SQLite" },
