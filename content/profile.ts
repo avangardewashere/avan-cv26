@@ -121,6 +121,31 @@ export const promos: readonly Promo[] = [
     },
     projectHref: "/projects/buildos",
   },
+  {
+    id: "habibit",
+    title: "Habibit",
+    label:
+      "Habibit: a gentle habit tracker. Tap a habit, keep it up, see your whole year",
+    // The banner's cream, so the frame around a contained video or banner matches it.
+    edge: "#fffbf7",
+    video: {
+      src1080: "/media/habibit-promo-1080.mp4",
+      src720: "/media/habibit-promo-720.mp4",
+      poster: "/media/habibit-promo-poster.webp",
+      audio: true,
+    },
+    banner: {
+      landscape: {
+        srcSet:
+          "/media/habibit-banner-1920.webp 1920w, /media/habibit-banner-2880.webp 2880w",
+        width: 1920,
+        height: 1080,
+      },
+      alt: "Habibit, a gentle habit tracker: habibi (love) plus habit plus bit. Tap a habit. Keep it up. See your whole year. Little habits, lots of love. Three phones show a habit's colour and schedule settings, today's habits with their streaks, and a progress screen. 3 ways to schedule, 53 weeks of history, 1,049 automated tests. Built with Next.js, React, TypeScript and Supabase.",
+      fit: "left",
+    },
+    projectHref: "/projects/habibit",
+  },
 ];
 
 /*

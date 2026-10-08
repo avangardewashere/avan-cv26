@@ -6,7 +6,7 @@ import { SPLASH } from "@/lib/splash";
 
 /*
  * A sneak peek of the work: the projects the hero does not promote (it shows
- * AMYGO and BuildOS next), as their 960w banners. Photos, not video: the
+ * the `promos` next), as their 960w banners. Photos, not video: the
  * splash is there to give the hero's video time to load, and a preview video
  * would compete with it for the same bandwidth. The Work rail reuses the same
  * files from cache.
