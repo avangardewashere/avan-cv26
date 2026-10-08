@@ -48,7 +48,7 @@ const bricolage = localFont({
   fallback: ["Bricolage Grotesque Fallback"],
 });
 
-const description = `${profile.role} in ${profile.location}. React and Next.js on the front, Node.js, PHP and SQL behind it, for real-time gaming, fintech and e-commerce.`;
+const description = `${profile.role} in ${profile.location}. React, Next.js and TypeScript on the front; Node.js, PHP and SQL behind it. Real-time gaming, fintech, e-commerce.`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -69,8 +69,11 @@ export const metadata: Metadata = {
     "WordPress",
     "WooCommerce",
     "REST API",
+    "GraphQL",
     "MongoDB",
     "SQL",
+    "PostgreSQL",
+    "Agile",
     "TypeScript",
     "Philippines",
     "Remote",

@@ -29,7 +29,7 @@ export function Experience() {
   return (
     <section
       id="experience"
-      className="defer-render scroll-mt-20 pt-(--space-section) [--defer-size:1960px] min-[480px]:[--defer-size:1690px] min-[760px]:[--defer-size:1290px] min-[1024px]:[--defer-size:1130px] xl:[--defer-size:1080px]"
+      className="defer-render scroll-mt-20 pt-(--space-section) [--defer-size:2150px] min-[480px]:[--defer-size:1650px] min-[760px]:[--defer-size:1360px] min-[1024px]:[--defer-size:1250px] xl:[--defer-size:1225px]"
     >
       <div data-reveal>
         <p className="eyebrow">Experience</p>

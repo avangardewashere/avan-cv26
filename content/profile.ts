@@ -133,16 +133,19 @@ export const about = {
   headline: "I'm Avel, a full-stack engineer.",
   headlineAccent: "Payments, online stores and real-time apps.",
   summary:
-    "For six years I've built and maintained production systems, database to UI. Today I freelance for clients in Australia and the Philippines, mostly PHP and WordPress, most recently taking a WooCommerce store live.",
+    "For six years I've built and maintained production systems end to end. Lately that means React, Next.js and TypeScript on the front; Node.js, Express and PHP behind them; and the REST APIs and payment integrations that join them. Today I freelance for clients in Australia and the Philippines, most recently taking a WooCommerce store live.",
   story: [
-    "I started in 2019 with part-time WordPress work: site speed, SEO and custom plugins. Since then I've worked across the stack, from Node.js services behind ExpressPay's branch system to real-money gaming inside the GCash app and a Telegram bot with in-chat payments.",
+    "I started in 2019 with part-time WordPress work: site speed, SEO and custom plugins. Since then I've worked across the stack, from Node.js services behind ExpressPay's branch system to real-money gaming inside the GCash app and a Telegram bot with in-chat payments. From ExpressPay onward every team I joined ran Agile sprints; from WBridges onward we also reviewed each other's code.",
     "Outside client work I build my own apps to learn something new each time. The latest is AMYGO, the 3D gym at the top of this page, in React and three.js.",
   ],
   facts: [
     { term: "Based in", detail: "Metro Manila, Philippines (UTC+8)" },
     { term: "Looking for", detail: "Remote full-stack work" },
     { term: "Experience", detail: "Since 2019, full-time since Feb 2020" },
-    { term: "Education", detail: "BS Computer Science, Manuel S. Enverga University" },
+    {
+      term: "Education",
+      detail: "BS Computer Science, Manuel S. Enverga University",
+    },
   ],
 } as const;
 
@@ -185,7 +188,10 @@ export const capabilities: readonly Capability[] = [
       "Upgraded its stack from PHP 7 to 8 and fixed page-cache conflicts serving stale HTML.",
       "A personal project: a multi-tenant commerce backend with REST APIs and tenant-scoped auth for more than one storefront.",
     ],
-    link: { label: "Multi-store platform", href: "/projects/multi-store-ecommerce" },
+    link: {
+      label: "Multi-store platform",
+      href: "/projects/multi-store-ecommerce",
+    },
   },
   {
     id: "realtime",

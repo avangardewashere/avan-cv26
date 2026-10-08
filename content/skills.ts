@@ -28,6 +28,8 @@ export const skillGroups: readonly SkillGroup[] = [
       { name: "Elementor" },
       { name: "Figma" },
       { name: "Cocos Creator" },
+      { name: "React Native / Expo" },
+      { name: "three.js" },
     ],
   },
   {
@@ -37,8 +39,9 @@ export const skillGroups: readonly SkillGroup[] = [
       { name: "Node.js / Express", core: true },
       { name: "WordPress", core: true },
       { name: "WooCommerce", core: true },
-      { name: "REST APIs" },
+      { name: "REST APIs", core: true },
       { name: "Webhooks" },
+      { name: "GraphQL" },
       { name: "Laravel" },
       { name: "CodeIgniter" },
       { name: "tRPC" },
@@ -49,7 +52,12 @@ export const skillGroups: readonly SkillGroup[] = [
   {
     title: "Data",
     layer: "03",
-    items: [{ name: "SQL" }, { name: "MongoDB" }],
+    items: [
+      { name: "SQL" },
+      { name: "PostgreSQL" },
+      { name: "MongoDB" },
+      { name: "SQLite" },
+    ],
   },
   {
     title: "Infra & ops",
@@ -57,7 +65,9 @@ export const skillGroups: readonly SkillGroup[] = [
     items: [
       { name: "Git", core: true },
       { name: "AWS / S3" },
+      { name: "Vercel" },
       { name: "Docker" },
+      { name: "GitHub Actions CI" },
       { name: "cPanel / WHM" },
       { name: "DNS" },
     ],
@@ -76,6 +86,16 @@ export const skillGroups: readonly SkillGroup[] = [
     ],
   },
   {
+    title: "Process & testing",
+    items: [
+      { name: "Agile / Scrum" },
+      { name: "Code review" },
+      { name: "UAT sign-off" },
+      { name: "Jest" },
+      { name: "Vitest" },
+    ],
+  },
+  {
     title: "Payments & integrations",
     items: [
       { name: "Stripe", core: true },
@@ -83,7 +103,7 @@ export const skillGroups: readonly SkillGroup[] = [
       { name: "Telegram Bot API", core: true },
       { name: "PayMaya" },
       { name: "WooPayments" },
-      { name: "TencentChat Cloud" },
+      { name: "Tencent Cloud Chat" },
       { name: "Jetpack VideoPress" },
     ],
   },

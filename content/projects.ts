@@ -36,11 +36,7 @@ const banner = (slug: string, alt: string): ProjectMedia => ({
  * it under 16 characters: it shares a 278px row with the group chip at 320px.
  */
 export type Discipline =
-  | "Full stack"
-  | "Backend / API"
-  | "WordPress / PHP"
-  | "Front end"
-  | "Mobile";
+  "Full stack" | "Backend / API" | "WordPress / PHP" | "Front end" | "Mobile";
 
 /** Where a piece of work sat in the stack. Detail pages only. */
 export type StepTag = "UI" | "API" | "Data" | "Server" | "QA";
@@ -136,7 +132,7 @@ export const projects: readonly Project[] = [
       "An Australian tactical-gear retailer moved from staging to a live store on shared cPanel hosting with no SSH. ~5,100 orders, 1,156 variations and a 213MB database carried across; Stripe webhook failures traced and the orders paid during the outage reconciled.",
     oneLiner:
       "WooCommerce store taken live without SSH; Stripe webhooks fixed in production.",
-    lede: "An Australian tactical-gear retailer moved from staging to a live store on shared cPanel hosting with no SSH access — then Stripe webhooks fixed in production, with paying customers on the other side.",
+    lede: "An Australian tactical-gear retailer moved from staging to a live store on shared cPanel hosting with no SSH access, then had its Stripe webhooks fixed in production, with paying customers on the other side.",
     highlights: [
       "293 products, 1,156 variations, ~5,100 orders and 55 active plugins carried across intact",
       "Traced live Stripe webhook failures to a signing-secret mismatch and reconciled the orders paid during the outage window",
@@ -155,7 +151,10 @@ export const projects: readonly Project[] = [
     caseStudy: {
       status: "Live · private",
       facts: [
-        { term: "Client", detail: "Tactical & law-enforcement retailer, Australia" },
+        {
+          term: "Client",
+          detail: "Tactical & law-enforcement retailer, Australia",
+        },
         { term: "Role", detail: "Sole developer, freelance" },
         { term: "When", detail: "Jun – Jul 2026" },
       ],
@@ -166,7 +165,7 @@ export const projects: readonly Project[] = [
         { value: "0", label: "orders lost" },
       ],
       constraint:
-        "Shared cPanel hosting, no SSH, and a live store with paying customers on the other side of the cut-over. The paid restore path for the migration plugin was unavailable, so the whole import had to run through the All-in-One WP Migration JavaScript API — chunked uploads, in the browser, against a host with default PHP limits.",
+        "Shared cPanel hosting, no SSH, and a live store with paying customers on the other side of the cut-over. The paid restore path for the migration plugin was unavailable, so the whole import had to run through the All-in-One WP Migration JavaScript API: chunked uploads, in the browser, against a host with default PHP limits.",
       steps: [
         {
           tag: "Server",
@@ -186,7 +185,7 @@ export const projects: readonly Project[] = [
         },
         {
           tag: "QA",
-          text: "Pre-launch QA caught GST calculated without shipping, a missing AU Terms & Conditions page, and SKU-prefix collisions in search — all fixed before customers saw them.",
+          text: "Pre-launch QA caught GST calculated without shipping, a missing AU Terms & Conditions page and SKU-prefix collisions in search.",
         },
       ],
       cost: "Roughly two weeks, one outage window during which orders still landed in Stripe but not in WooCommerce, and a handover document the client's team can follow without me: the correct cache-clear sequence, where the limits live, and what to check first when a webhook goes quiet.",
@@ -296,7 +295,14 @@ export const projects: readonly Project[] = [
       "Painted walls, a mirror and zone names, so the floor reads as a real gym",
       "Phone-ready: an on-screen joystick, and quality that steps down on its own when frames slow",
     ],
-    stack: ["React", "Three.js", "React Three Fiber", "TypeScript", "Vite", "Vitest"],
+    stack: [
+      "React",
+      "Three.js",
+      "React Three Fiber",
+      "TypeScript",
+      "Vite",
+      "Vitest",
+    ],
     media: banner(
       "gym3d",
       "AMYGO poster: a low-poly lifter back-squats in the free-weights zone, beside the line Walk in. Pick a machine. Train. and the figures 12 machines, 17 exercises, 28 pieces to rearrange.",
@@ -327,10 +333,22 @@ export const projects: readonly Project[] = [
       "Automatic progress roll-up: a blocked step flags its whole branch, and a branch counts as done only when every step in it is done",
       "Drag to reorder, move a whole branch to a new parent, and reuse templates saved from any branch at any depth",
       "Archive for finished projects, a trash that keeps deleted work restorable for 30 days, search across the whole tree with each result's path, and JSON export and import",
-      { tag: "Data", text: "MVVM with a repository layer: screens never touch storage, which let the app move from AsyncStorage to SQLite with a one-time migration and no data loss" },
-      { tag: "Data", text: "Guarded schema migrations, with a test that reads the SQL source and fails if a new column ships without one; it would have caught a real bug that crashed the templates screen on older installs" },
-      { tag: "Data", text: "Stats from an append-only event log, counted once per item per day, so ticking a step on and off doesn't inflate them" },
-      { tag: "QA", text: "160 Jest unit tests across the tree logic, the trash lifecycle and the stats" },
+      {
+        tag: "Data",
+        text: "MVVM with a repository layer: screens never touch storage, which let the app move from AsyncStorage to SQLite with a one-time migration and no data loss",
+      },
+      {
+        tag: "Data",
+        text: "Guarded schema migrations, with a test that reads the SQL source and fails if a new column ships without one; it would have caught a real bug that crashed the templates screen on older installs",
+      },
+      {
+        tag: "Data",
+        text: "Stats from an append-only event log, counted once per item per day, so ticking a step on and off doesn't inflate them",
+      },
+      {
+        tag: "QA",
+        text: "160 Jest unit tests across the tree logic, the trash lifecycle and the stats",
+      },
     ],
     stack: [
       "React Native",
@@ -388,7 +406,13 @@ export const projects: readonly Project[] = [
         text: "Deployed and hosted it; at WBridges I managed hosting and deployment workflows on Pagoda and AWS",
       },
     ],
-    stack: ["HTML / CSS / JS", "Bootstrap 5", "jQuery", "Swiper", "Pagoda / AWS"],
+    stack: [
+      "HTML / CSS / JS",
+      "Bootstrap 5",
+      "jQuery",
+      "Swiper",
+      "Pagoda / AWS",
+    ],
     media: banner(
       "feiwin",
       "Feiwin banner: the company website's homepage on a laptop, beside the Feiwin logo and its four services.",
@@ -450,7 +474,7 @@ export const projects: readonly Project[] = [
     archiveSummary:
       "A Pomodoro-style timer with configurable focus and break lengths, a weekly chart of focus time by day, and a session log.",
     oneLiner: "Pomodoro timer with a weekly focus chart and session log.",
-    lede: "A Pomodoro-style focus timer with configurable focus and break lengths, a weekly chart of focus time by day, and a session log — built to answer one question after a work session: did I actually focus, or did it just feel like it.",
+    lede: "A Pomodoro-style focus timer with configurable focus and break lengths, a weekly chart of focus time by day, and a session log, built to answer one question after a work session: did I actually focus, or did it just feel like it.",
     highlights: [
       "Configurable focus, short-break, and long-break durations, with a long-break-after-N-sessions rule",
       "Weekly focus-time chart by day, with a plain-table view as an alternative to the bars",
@@ -478,7 +502,7 @@ export const projects: readonly Project[] = [
     archiveSummary:
       "Named counters for anything you'd lose track of during the day, tagged by category, with one running total across every counter.",
     oneLiner: "Named, categorised counters with one running total for the day.",
-    lede: "Named counters for anything you'd otherwise lose track of during the day — glasses of water, reps, cigarettes avoided — each tagged by category, with one running total for today across every counter at once.",
+    lede: "Named counters for anything you'd otherwise lose track of during the day (glasses of water, reps, cigarettes avoided), each tagged by category, with one running total for today across every counter at once.",
     highlights: [
       "Each tally has its own name, description, and category: Health, Fitness, Habits, Work, or Other",
       'A single "Total today" figure aggregates every active counter, not just one',
@@ -520,7 +544,12 @@ export const projects: readonly Project[] = [
   },
 ];
 
-export const projectGroups = ["All", "Client", "Employment", "Personal"] as const;
+export const projectGroups = [
+  "All",
+  "Client",
+  "Employment",
+  "Personal",
+] as const;
 
 export function getProject(slug: string) {
   return projects.find((p) => p.slug === slug);

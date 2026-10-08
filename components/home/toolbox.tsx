@@ -40,14 +40,16 @@ export function Toolbox() {
   return (
     <section
       id="toolbox"
-      className="defer-render border-foreground/6 from-foreground/[3.5%] to-foreground/1 relative mt-(--space-section) scroll-mt-20 rounded-[32px] border bg-linear-to-b p-[clamp(20px,4vw,48px)] [--defer-size:1500px] min-[480px]:[--defer-size:1220px] min-[760px]:[--defer-size:980px] xl:[--defer-size:820px]"
+      className="defer-render border-foreground/6 from-foreground/[3.5%] to-foreground/1 relative mt-(--space-section) scroll-mt-20 rounded-[32px] border bg-linear-to-b p-[clamp(20px,4vw,48px)] [--defer-size:1935px] min-[480px]:[--defer-size:1500px] min-[760px]:[--defer-size:1080px] xl:[--defer-size:940px]"
     >
       {/* Revealed via a wrapper: a translated anchor target makes nav jumps land short. */}
       <div data-reveal>
         <p className="eyebrow">Toolbox</p>
         <h2 className="display mt-3 mb-7 max-w-[24ch] text-[clamp(30px,3.6vw,48px)] leading-[1.02] tracking-[-0.035em] text-balance">
           Shipped with, not read about.{" "}
-          <span className="text-muted">Highlighted ones are daily drivers.</span>
+          <span className="text-muted">
+            Highlighted ones are daily drivers.
+          </span>
         </h2>
       </div>
 
@@ -85,7 +87,8 @@ export function Toolbox() {
         ))}
       </div>
 
-      <div className="mt-3 grid grid-cols-[repeat(auto-fit,minmax(min(100%,300px),1fr))] gap-3">
+      {/* Four cards: one column, then 2 x 2, then a row of four, so none is left alone. */}
+      <div className="mt-3 grid gap-3 min-[640px]:grid-cols-2 xl:grid-cols-4">
         {crossCutting.map((group, i) => (
           <div
             key={group.title}
